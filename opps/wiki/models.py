@@ -13,10 +13,10 @@ from opps.core.models import NotUserPublishable, Slugged, Imaged
 
 class TaggedWiki(TaggedItemBase):
     """Tag for wiki """
-    content_object = models.ForeignKey('wiki.WikiContent')
+    content_object = models.ForeignKey('wiki.Wiki')
 
 
-class WikiContent(NotUserPublishable, Slugged):
+class Wiki(NotUserPublishable, Slugged):
     title = models.CharField(_(u"title"), max_length=140)
     tags = TaggableManager(
         blank=True,
@@ -43,17 +43,17 @@ class WikiContent(NotUserPublishable, Slugged):
         if not self.pk:
             self.child_class = self.__class__.__name__
             self.child_app_label = self._meta.app_label
-        super(WikiContent, self).save(*args, **kwargs)
+        super(Wiki, self).save(*args, **kwargs)
 
     def get_child_object(self):
         child_model = get_model(self.child_app_label, self.child_class)
-        if child_model == WikiContent:
+        if child_model == Wiki:
             return self
 
         return child_model._default_manager.get(pk=self.pk)
 
 
-class Page(WikiContent):
+class Page(Wiki):
     content = models.TextField(_(u'content'))
 
 
@@ -61,9 +61,9 @@ class Genre(models.Model):
     name = models.CharField(max_length=200)
 
 
-class BaseArtist(WikiContent):
+class BaseArtist(Wiki):
     biography = models.TextField()
-    # it will use wikicontent title as name
+    # it will use Wiki title as name
     genre = models.ForeignKey('wiki.Genre', null=True, blank=True)
     albums = models.ManyToManyField('wiki.Album')
 
