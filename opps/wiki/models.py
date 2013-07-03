@@ -36,6 +36,9 @@ class WikiContent(NotUserPublishable, Slugged):
         editable=False
     )
 
+    def __unicode__(self):
+        return self.title
+
     def save(self, *args, **kwargs):
         if not self.pk:
             self.child_class = self.__class__.__name__
