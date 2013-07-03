@@ -55,3 +55,39 @@ class WikiContent(NotUserPublishable, Slugged):
 
 class Page(WikiContent):
     content = models.TextField(_(u'content'))
+
+
+class Genre(models.Model):
+    name = models.CharField(max_length=200)
+
+
+class BaseArtist(WikiContent):
+    biography = models.TextField()
+    # it will use wikicontent title as name
+    genre = models.ForeignKey('wiki.Genre', null=True, blank=True)
+    albums = models.ManyToManyField('wiki.Album')
+
+    class Meta:
+        abstract = True
+
+
+class Artist(BaseArtist):
+    birthday = models.DateField()
+    death = models.DateField(null=True, blank=True)
+    # verify death after birthday
+    band = models.ForeignKey('wiki.Band', null=True, blank=True)
+
+
+class Band(models.Model):
+    biography = models.TextField()
+    beginning = models.DateField()
+    end = models.DateField(null=True, blank=True)
+    albums = models.ManyToManyField('wiki.Album', related_name=u'albums')
+
+
+class Album(models.Model):
+    thumbnail = models.ImageField(upload_to='thumbnails')
+    year = models.PositiveSmallIntegerField()
+
+
+# embed (images, audios and videos)
