@@ -45,7 +45,7 @@ class WikiContent(NotUserPublishable, Slugged):
             self.child_app_label = self._meta.app_label
         super(WikiContent, self).save(*args, **kwargs)
 
-    def get_child_model(self):
+    def get_child_object(self):
         child_model = get_model(self.child_app_label, self.child_class)
         if child_model == WikiContent:
             return self
