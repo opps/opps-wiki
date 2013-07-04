@@ -62,37 +62,76 @@ class Wiki(NotUserPublishable, Slugged):
 
 
 class Page(Wiki):
-    content = models.TextField(_(u'content'))
+    content = models.TextField(_(u'content'), )
 
 
 class Genre(models.Model):
-    name = models.CharField(max_length=200)
+    name = models.CharField(_(u'name'), max_length=200)
+
+    def __unicode__(self):
+        return self.name
+
+
+class Embed(models.Model):
+    embed = models.TextField(_(u'embed'), )
+
+    def __unicode__(self):
+        return self.embed
+
+
+class RecordLabel(models.Model):
+    name = models.CharField(_(u'name'), max_length=200)
+
+    def __unicode__(self):
+        return self.name
 
 
 class BaseArtist(Wiki):
-    biography = models.TextField()
+    biography = models.TextField(_(u'biography'), )
     # it will use Wiki title as name
     genre = models.ForeignKey('wiki.Genre', null=True, blank=True)
     albums = models.ManyToManyField('wiki.Album')
+    embed = models.ForeignKey('wiki.Embed')
 
     class Meta:
         abstract = True
 
+    def __unicode__(self):
+        return self.title
+
 
 class Artist(BaseArtist):
-    birthday = models.DateField()
-    death = models.DateField(null=True, blank=True)
+    birthday = models.DateField(_(u'birthday'), )
+    death = models.DateField(_(u'death'), null=True, blank=True)
     # verify death after birthday
     band = models.ForeignKey('wiki.Band', null=True, blank=True)
 
+    def __unicode__(self):
+        return self.title
 
-class Band(models.Model):
-    biography = models.TextField()
-    beginning = models.DateField()
-    end = models.DateField(null=True, blank=True)
-    albums = models.ManyToManyField('wiki.Album', related_name=u'albums')
+
+class Band(BaseArtist):
+    beginning = models.DateField(_(u'beginning'), )
+    end = models.DateField(_(u'end'), null=True, blank=True)
+
+    def __unicode__(self):
+        return self.title
+
+
+class Track(models.Model):
+    album = models.ForeignKey('wiki.Album')
+    name = models.CharField(_(u'name'), max_length=200)
+    record_label = models.ForeignKey('wiki.RecordLabel', null=True, blank=True)
+    year = models.PositiveSmallIntegerField(_(u'year'), null=True, blank=True)
+
+    def __unicode__(self):
+        return self.name
 
 
 class Album(models.Model):
-    thumbnail = models.ImageField(upload_to='thumbnails')
-    year = models.PositiveSmallIntegerField()
+    name = models.CharField(_(u'name'), max_length=200)
+    thumbnail = models.ImageField(_(u'thumbnail'), upload_to='thumbnails')
+    year = models.PositiveSmallIntegerField(_(u'year'), )
+
+    def __unicode__(self):
+        return self.name
