@@ -1,0 +1,35 @@
+{% extends "admin/change_list.html" %}
+{% load i18n wiki_tags %}
+
+{% block extrahead %}
+{{ block.super }}
+<style>
+.object-tools li {
+    background: none;
+}
+.object-tools li:hover {
+    background: none;
+}
+</style>
+<script type="text/javascript">
+    function go_add_page(value) {
+        if (value != "") {
+            window.location = value;
+        }
+    }
+</script>
+{% endblock %}
+
+{% block object-tools-items %}
+<li>
+    <select class="addlist" onchange="go_add_page(this.value)">
+        <option value="">{% trans "add"|capfirst %} ...</option>
+        {% for model in model_list %}
+            {% admin_url model 'add' as model_url %}
+            {% if model_url %}
+            <option value="{{ model_url }}">{{ model.meta__.verbose_name|capfirst }}</option>
+            {% endif %}
+        {% endfor %}
+    </select>
+</li>
+{% endblock %}

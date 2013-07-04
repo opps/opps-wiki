@@ -2,8 +2,12 @@
 from django.conf.urls import patterns, url
 from django.conf import settings
 from django.views.decorators.cache import cache_page
+from django.contrib import admin
 
 from .views import WikiListView, WikiDetailView
+
+
+admin.site.index_template = 'admin/opps_admin_index.html'
 
 
 urlpatterns = patterns(

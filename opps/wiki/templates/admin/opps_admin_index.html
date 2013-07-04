@@ -1,0 +1,7 @@
+{% extends "admin/index.html" %}
+{% load wiki_tags %}
+
+{% block content %}
+{% set_app_list %}
+{{ block.super }}
+{% endblock %}
