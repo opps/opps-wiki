@@ -61,11 +61,20 @@ class Genre(models.Model):
     name = models.CharField(max_length=200)
 
 
+class Embed(models.Model):
+    embed = models.TextField()
+
+
+class RecordLabel(models.Model):
+    name = models.CharField(max_length=200)
+
+
 class BaseArtist(Wiki):
     biography = models.TextField()
     # it will use Wiki title as name
     genre = models.ForeignKey('wiki.Genre', null=True, blank=True)
     albums = models.ManyToManyField('wiki.Album')
+    embed = models.ForeignKey('wiki.Embed')
 
     class Meta:
         abstract = True
@@ -78,16 +87,18 @@ class Artist(BaseArtist):
     band = models.ForeignKey('wiki.Band', null=True, blank=True)
 
 
-class Band(models.Model):
-    biography = models.TextField()
+class Band(BaseArtist):
     beginning = models.DateField()
     end = models.DateField(null=True, blank=True)
-    albums = models.ManyToManyField('wiki.Album', related_name=u'albums')
+
+
+class Track(models.Model):
+    album = models.ForeignKey('wiki.Album')
+    name = models.CharField(max_length=200)
+    record_label = models.ForeignKey('wiki.RecordLabel', null=True, blank=True)
+    year = models.PositiveSmallIntegerField(null=True, blank=True)
 
 
 class Album(models.Model):
     thumbnail = models.ImageField(upload_to='thumbnails')
     year = models.PositiveSmallIntegerField()
-
-
-# embed (images, audios and videos)
