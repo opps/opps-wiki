@@ -22,6 +22,14 @@ class WikiAdmin(reversion.VersionAdmin):
             setattr(model, "meta__", model._meta)
             yield model
 
+    def add_view(self, request, **kwargs):
+        if self.model is Wiki:
+            wiki_models = Wiki.get_wiki_models()
+            if wiki_models:
+                return HttpResponseRedirect(admin_url(wiki_models[0], 'add'))
+            return HttpResponseRedirect(admin_url(Wiki, "changelist"))
+        return super(WikiAdmin, self).add_view(request, **kwargs)
+
     def changelist_view(self, request, extra_context=None):
         if self.model is not Wiki:
             return HttpResponseRedirect(admin_url(Wiki, "changelist"))
