@@ -8,9 +8,7 @@ from django.shortcuts import get_object_or_404
 from django.http import HttpResponseRedirect
 from django.utils.translation import ugettext_lazy as _
 
-from redactor.widgets import RedactorEditor
-
-from .models import Wiki, Page, Artist
+from .models import Wiki
 from .templatetags.wiki_tags import admin_url
 
 
@@ -49,15 +47,3 @@ class WikiAdmin(reversion.VersionAdmin):
         perms['show_app'] = self.model is Wiki
         return perms
 admin.site.register(Wiki, WikiAdmin)
-
-
-class PageAdminForm(forms.ModelForm):
-    class Meta:
-        model = Page
-        widgets = {'content': RedactorEditor()}
-
-
-class PageAdmin(WikiAdmin):
-    form = PageAdminForm
-admin.site.register(Page, PageAdmin)
-admin.site.register(Artist, WikiAdmin)
