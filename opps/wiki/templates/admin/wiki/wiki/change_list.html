@@ -1,13 +1,13 @@
-{% extends "admin/change_list.html" %}
+{% extends "reversion/change_list.html" %}
 {% load i18n wiki_tags %}
 
 {% block extrahead %}
 {{ block.super }}
 <style>
-.object-tools li {
+.object-tools li.no-background {
     background: none;
 }
-.object-tools li:hover {
+.object-tools li.no-background:hover {
     background: none;
 }
 </style>
@@ -17,11 +17,31 @@
             window.location = value;
         }
     }
+    function remove_add_link() {
+        var link = document.getElementsByClassName('addlink')[0];
+        if (link) {
+            link.parentElement.remove();
+        }
+    }
+    if(window.attachEvent) {
+        window.attachEvent('onload', remove_add_link);
+    } else {
+        if(window.onload) {
+            var curronload = window.onload;
+            var newonload = function() {
+                curronload();
+                remove_add_link();
+            };
+            window.onload = newonload;
+        } else {
+            window.onload = remove_add_link;
+        }
+    }
 </script>
 {% endblock %}
 
 {% block object-tools-items %}
-<li>
+<li class="no-background">
     <select class="addlist" onchange="go_add_page(this.value)">
         <option value="">{% trans "add"|capfirst %} ...</option>
         {% for model in model_list %}
@@ -32,4 +52,5 @@
         {% endfor %}
     </select>
 </li>
+{{ block.super }}
 {% endblock %}

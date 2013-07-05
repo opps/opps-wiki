@@ -1,5 +1,6 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
+import reversion
 
 from django.contrib import admin
 from django import forms
@@ -13,7 +14,9 @@ from .models import Wiki, Page, Artist
 from .templatetags.wiki_tags import admin_url
 
 
-class WikiAdmin(admin.ModelAdmin):
+class WikiAdmin(reversion.VersionAdmin):
+
+    change_list_template = "admin/wiki/wiki/change_list.html"
 
     @property
     def model_list(self):
@@ -30,7 +33,7 @@ class WikiAdmin(admin.ModelAdmin):
         return super(WikiAdmin, self).changelist_view(request, extra_context)
 
     def change_view(self, request, object_id, **kwargs):
-        wiki = get_object_or_404(Page, pk=object_id)
+        wiki = get_object_or_404(Wiki, pk=object_id)
         child_object = wiki.get_child_object()
         if self.model is Wiki and child_object.__class__ is not Wiki:
             change_url = admin_url(
@@ -40,12 +43,6 @@ class WikiAdmin(admin.ModelAdmin):
             )
             return HttpResponseRedirect(change_url)
         return super(WikiAdmin, self).change_view(request, object_id, **kwargs)
-
-    def in_menu(self):
-        """
-        Show only Wiki model
-        """
-        return self.model is Wiki
 
     def get_model_perms(self, request):
         perms = super(WikiAdmin, self).get_model_perms(request)
