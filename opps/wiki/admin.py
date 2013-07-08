@@ -8,13 +8,17 @@ from django.shortcuts import get_object_or_404
 from django.http import HttpResponseRedirect
 from django.utils.translation import ugettext_lazy as _
 
+from mptt.admin import MPTTModelAdmin
+
 from .models import Wiki
 from .templatetags.wiki_tags import admin_url
 
 
-class WikiAdmin(reversion.VersionAdmin):
+class WikiAdmin(reversion.VersionAdmin, MPTTModelAdmin):
 
     change_list_template = "admin/wiki/wiki/change_list.html"
+    list_display = ('title', 'parent', 'long_slug', 'published')
+    mptt_indent_field = "title"
 
     @property
     def model_list(self):

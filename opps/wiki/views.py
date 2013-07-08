@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 from django.contrib.sites.models import get_current_site
+from django.http import Http404
 from django.utils import timezone
 
 from django.views.generic import ListView, DetailView
@@ -36,7 +37,13 @@ class WikiListView(BaseWikiView, ListView):
 
 class WikiDetailView(BaseWikiView, DetailView):
     model = Wiki
+    slug_field = 'long_slug'
+    slug_url_kwarg = 'long_slug'
 
     def get_object(self, queryset=None):
-        parent_obj = super(WikiDetailView, self).get_object(queryset)
-        return parent_obj.get_child_object()
+        wiki_obj = super(WikiDetailView, self).get_object(queryset)
+
+        for parent in wiki_obj.get_ancestors():
+            if not parent.published:
+                raise Http404()
+        return wiki_obj.get_child_object()

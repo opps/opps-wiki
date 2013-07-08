@@ -6,7 +6,7 @@ from setuptools import setup, find_packages
 from opps import wiki
 
 
-install_requires = ["opps", "django-reversion"]
+install_requires = ["opps", "django-reversion", "django-mptt"]
 
 classifiers = ["Development Status :: 4 - Beta",
                "Intended Audience :: Developers",

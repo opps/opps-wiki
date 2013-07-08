@@ -5,6 +5,7 @@ from django.db.models import get_model, get_models
 from django.conf import settings
 from django.utils.translation import ugettext_lazy as _
 
+from mptt.models import MPTTModel, TreeForeignKey
 from taggit.models import TaggedItemBase
 from taggit.managers import TaggableManager
 
@@ -16,7 +17,7 @@ class TaggedWiki(TaggedItemBase):
     content_object = models.ForeignKey('wiki.Wiki')
 
 
-class Wiki(NotUserPublishable, Slugged):
+class Wiki(MPTTModel, NotUserPublishable, Slugged):
     title = models.CharField(_(u"title"), max_length=140)
     tags = TaggableManager(
         blank=True,
@@ -35,6 +36,15 @@ class Wiki(NotUserPublishable, Slugged):
         db_index=True,
         editable=False
     )
+    parent = TreeForeignKey(
+        'self',
+        related_name='subpage',
+        null=True,
+        blank=True
+    )
+
+    long_slug = models.SlugField(_(u"Path name"), max_length=255,
+                                 db_index=True, editable=False)
 
     def __unicode__(self):
         return self.title
@@ -43,6 +53,12 @@ class Wiki(NotUserPublishable, Slugged):
         if not self.pk:
             self.child_class = self.__class__.__name__
             self.child_app_label = self._meta.app_label
+
+        self.long_slug = self.slug
+        parent = self.parent
+        while parent:
+            self.long_slug = u"{}/{}".format(parent.slug, self.long_slug)
+            parent = parent.parent
         super(Wiki, self).save(*args, **kwargs)
 
     @classmethod
