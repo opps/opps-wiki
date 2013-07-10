@@ -34,17 +34,9 @@ class Musician(Wiki):
         return self.title
 
 
-class Track(models.Model):
-    album = models.ForeignKey('Album', verbose_name=_(u'album'))
-    name = models.CharField(_(u'name'), max_length=200)
-    year = models.PositiveSmallIntegerField(_(u'year'), null=True, blank=True)
-
-    def __unicode__(self):
-        return self.name
-
-
 class Album(Wiki):
     name = models.CharField(_(u'name'), max_length=200)
+    tracks = models.TextField(_(u'tracks'))
     musician = models.ForeignKey('Musician', verbose_name=_(u'musician'))
     thumbnail = models.ImageField(_(u'thumbnail'), upload_to='thumbnails')
     record_label = models.CharField(_(u'record label'), max_length=200,
