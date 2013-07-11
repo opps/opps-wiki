@@ -1,5 +1,9 @@
+{% extends "wiki/wiki_base.html" %}
+
+{% block wiki-base-content %}
 <ul>
 {% for object in object_list %}
     <li>{{ object }}</li>
 {% endfor %}
 </ul>
+{% endblock %}

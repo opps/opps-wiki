@@ -1,4 +1,5 @@
-<h3>{{ object.title }}</h3>
-{{ object.content|safe }}
+{% extends "wiki/wiki_detail.html" %}
 
-<small>{{ object.tags.all|join:", " }}</small>
+{% block content %}
+{{ object.content|safe }}
+{% endblock %}
