@@ -1,20 +1,28 @@
 {% extends "wiki/wiki_base.html" %}
+{% load i18n %}
 
 {% block wiki-base-content %}
-    {% block wiki-title %}
-      <h3>{{ object.title }} | <span>{% trans 'Edit' %}</span></h3>
-    {% endblock %}
+  {% block wiki-title %}
+    <h3>{{ object.title }} | <span>{% trans 'Edit' %}</span></h3>
+  {% endblock %}
 
-    {% block content %}
-    {% endblock %}
+  {% block content %}
+  {% endblock %}
 
-    {% block wiki-subwiki %}
-      {% for subwiki in object.subwiki %}
-        <a href="{{ subwiki.get_absolute_url }}">{{ subwiki.title }}</a>
-      {% endfor %}
-    {% endblock %}
+  {% block wiki-subwiki %}
+    {% with children=object.get_published_children %}
+      {% if children %}
+        <h4>{% trans 'Sub Pages' %}</h4>
+        <ul>
+        {% for child in children %}
+          <li><a href="{{ child.get_absolute_url }}">{{ child.title }}</a></li>
+        {% endfor %}
+        </ul>
+      {% endif %}
+    {% endwith %}
+  {% endblock %}
 
-    {% block wiki-tags %}
-      <small>{{ object.tags.all|join:", " }}</small>
-    {% endblock %}
+  {% block wiki-tags %}
+    <small>{{ object.tags.all|join:", " }}</small>
+  {% endblock %}
 {% endblock %}

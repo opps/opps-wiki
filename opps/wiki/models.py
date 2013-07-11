@@ -1,11 +1,13 @@
 # -*- coding: utf-8 -*-
 
 from django.contrib.contenttypes import generic
+from django.core.urlresolvers import reverse
 from django.db import models
 from django.db.models import get_model, get_models
 from django.conf import settings
 from django.utils.translation import ugettext_lazy as _
 from django.utils.text import slugify
+from django.utils import timezone
 
 from mptt.models import MPTTModel, TreeForeignKey
 from taggit.models import TaggedItemBase
@@ -68,6 +70,9 @@ class Wiki(MPTTModel, NotUserPublishable, Slugged):
             parent = parent.parent
         super(Wiki, self).save(*args, **kwargs)
 
+    def get_absolute_url(self):
+        return reverse('wiki-detail', kwargs={'long_slug': self.long_slug})
+
     @classmethod
     def get_wiki_models(cls):
         # Get wiki subclasses
@@ -82,6 +87,12 @@ class Wiki(MPTTModel, NotUserPublishable, Slugged):
             return self
 
         return child_model._default_manager.get(pk=self.pk)
+
+    def get_published_children(self):
+        return self.get_children().filter(
+            published=True,
+            date_available__lte=timezone.now()
+        )
 
 
 class Suggestion(Owned, Date):
