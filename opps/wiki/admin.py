@@ -62,8 +62,8 @@ admin.site.register(Wiki, WikiAdmin)
 
 
 class SuggestionAdmin(admin.ModelAdmin):
-    list_display = ('content_type', 'content_object', 'user', 'status',
-                    'date_insert')
+    list_display = ('content_type', 'title', 'content_object', 'user',
+                    'status', 'date_insert')
 
     def has_add_permission(self, request):
         return False

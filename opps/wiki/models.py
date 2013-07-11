@@ -102,7 +102,9 @@ class Suggestion(Owned, Date):
         ('accept', _(u'Accept'))
     )
     content_type = models.ForeignKey('contenttypes.ContentType')
-    object_id = models.PositiveIntegerField(verbose_name='object name')
+    object_id = models.PositiveIntegerField(verbose_name='object name',
+                                            null=True)
+    title=models.CharField(_(u'title'), max_length=140)
     content_object = generic.GenericForeignKey()
     serialized_data = models.TextField(_(u'data'))
     status = models.CharField(_(u'status'), max_length=50,
