@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 
+from django.contrib.contenttypes import generic
 from django.db import models
 from django.db.models import get_model, get_models
 from django.conf import settings
@@ -9,7 +10,7 @@ from mptt.models import MPTTModel, TreeForeignKey
 from taggit.models import TaggedItemBase
 from taggit.managers import TaggableManager
 
-from opps.core.models import NotUserPublishable, Slugged, Imaged
+from opps.core.models import NotUserPublishable, Slugged, Owned, Date
 
 
 class TaggedWiki(TaggedItemBase):
@@ -75,3 +76,20 @@ class Wiki(MPTTModel, NotUserPublishable, Slugged):
             return self
 
         return child_model._default_manager.get(pk=self.pk)
+
+
+class Suggestion(Owned, Date):
+    STATUS_CHOICES = (
+        ('pending', _(u'Pending')),
+        ('reject', _(u'Reject')),
+        ('accept', _(u'Accept'))
+    )
+    content_type = models.ForeignKey('contenttypes.ContentType')
+    object_id = models.PositiveIntegerField(verbose_name='object name')
+    content_object = generic.GenericForeignKey()
+    serialized_data = models.TextField(_(u'data'))
+    status = models.CharField(_(u'status'), max_length=50,
+                              choices=STATUS_CHOICES)
+
+    def __unicode__(self):
+        return self.status
