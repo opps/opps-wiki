@@ -1,9 +1,10 @@
 # -*- coding: utf-8 -*-
+
 from django.contrib.sites.models import get_current_site
 from django.http import Http404
 from django.utils import timezone
-
 from django.views.generic import ListView, DetailView
+
 from .models import Wiki
 
 
