@@ -6,4 +6,5 @@ from opps.wiki.models import Wiki
 
 
 class Page(Wiki):
+    PUBLIC_FIELDS = ('title', 'content', 'parent')
     content = models.TextField(_(u'content'), )

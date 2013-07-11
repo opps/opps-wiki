@@ -21,6 +21,7 @@ class Embed(models.Model):
 
 
 class Musician(Wiki):
+    PUBLIC_FIELDS = ('title', 'type', 'genre', 'birthday', 'end', 'biography')
     TYPE_CHOICES = (('artist', _(u'Artist')), ('band', _(u'Band')))
     biography = models.TextField(_(u'biography'))
     # it will use Wiki title as name
@@ -35,6 +36,8 @@ class Musician(Wiki):
 
 
 class Album(Wiki):
+    PUBLIC_FIELDS = ('title', 'name', 'tracks', 'musician', 'thumbnail',
+                     'record_label', 'year')
     name = models.CharField(_(u'name'), max_length=200)
     tracks = models.TextField(_(u'tracks'))
     musician = models.ForeignKey('Musician', verbose_name=_(u'musician'))
