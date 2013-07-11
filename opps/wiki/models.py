@@ -4,6 +4,7 @@ from django.db import models
 from django.db.models import get_model, get_models
 from django.conf import settings
 from django.utils.translation import ugettext_lazy as _
+from django.utils.text import slugify
 
 from mptt.models import MPTTModel, TreeForeignKey
 from taggit.models import TaggedItemBase
@@ -43,8 +44,12 @@ class Wiki(MPTTModel, NotUserPublishable, Slugged):
         blank=True
     )
 
-    long_slug = models.SlugField(_(u"Path name"), max_length=255,
-                                 db_index=True, editable=False)
+    long_slug = models.SlugField(
+        _(u"Path name"),
+        max_length=255,
+        db_index=True,
+        editable=False
+    )
 
     def __unicode__(self):
         return self.title
@@ -54,6 +59,7 @@ class Wiki(MPTTModel, NotUserPublishable, Slugged):
             self.child_class = self.__class__.__name__
             self.child_app_label = self._meta.app_label
 
+        self.slug = slugify(title)
         self.long_slug = self.slug
         parent = self.parent
         while parent:
