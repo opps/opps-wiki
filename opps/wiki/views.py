@@ -30,6 +30,12 @@ class BaseWikiView(object):
             domain_names.append(u'{}/{}'.format(self.site.domain, name))
         return domain_names
 
+    def get_context_data(self, **kwargs):
+        context = super(BaseWikiView, self).get_context_data(**kwargs)
+        context['wiki_models'] = [w._meta.verbose_name for w \
+                                  in Wiki.get_wiki_models()]
+        return context
+
 
 class WikiListView(BaseWikiView, ListView):
     model = Wiki

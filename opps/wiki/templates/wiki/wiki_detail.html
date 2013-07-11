@@ -2,19 +2,19 @@
 
 {% block wiki-base-content %}
     {% block wiki-title %}
-    <h3>{{ object.title }} - Editar</h3>
+      <h3>{{ object.title }} | <span>{% trans 'Edit' %}</span></h3>
     {% endblock %}
 
     {% block content %}
     {% endblock %}
 
     {% block wiki-subwiki %}
-    {% for subwiki in object.subwiki %}
-    <a href="{{ subwiki.get_absolute_url }}">{{ subwiki.title }}</a>
-    {% endfor %}
+      {% for subwiki in object.subwiki %}
+        <a href="{{ subwiki.get_absolute_url }}">{{ subwiki.title }}</a>
+      {% endfor %}
     {% endblock %}
 
     {% block wiki-tags %}
-    <small>{{ object.tags.all|join:", " }}</small>
+      <small>{{ object.tags.all|join:", " }}</small>
     {% endblock %}
 {% endblock %}

@@ -1,9 +1,12 @@
+{% load i18n %}
+
 {% block wiki-add %}
-<select name="add">
-    <option value="">add ...</option>
-    <option value="page">page</option>
-    <option value="artist">artist</option>
-</select>
+  <select name="add">
+    <option value="">{% trans 'add' %}</option>
+    {% for wiki_model in wiki_models %}
+      <option value="">{{ wiki_model }}</option>
+    {% endfor %}
+  </select>
 {% endblock %}
 
 {% block wiki-base-content %}
