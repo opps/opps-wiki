@@ -60,7 +60,7 @@ class Wiki(MPTTModel, NotUserPublishable, Slugged):
             self.child_class = self.__class__.__name__
             self.child_app_label = self._meta.app_label
 
-        self.slug = slugify(title)
+        self.slug = slugify(self.title)
         self.long_slug = self.slug
         parent = self.parent
         while parent:
