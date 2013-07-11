@@ -74,6 +74,10 @@ class Wiki(MPTTModel, NotUserPublishable, Slugged):
         return reverse('wiki-detail', kwargs={'long_slug': self.long_slug})
 
     @classmethod
+    def add_url(cls):
+        return reverse('wiki-add', args=(cls._meta.app_label, cls.__name__))
+
+    @classmethod
     def get_wiki_models(cls):
         # Get wiki subclasses
         if not hasattr(cls, '_wiki_models'):

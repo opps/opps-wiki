@@ -3,7 +3,10 @@
 
 {% block wiki-base-content %}
   {% block wiki-title %}
-    <h3>{{ object.title }} | <span>{% trans 'Edit' %}</span></h3>
+    <h3>{{ object.title }} |
+    <span>
+      <a href="{% url 'wiki-edit' object.long_slug %}">{% trans 'Edit' %}</a>
+    </span></h3>
   {% endblock %}
 
   {% block content %}

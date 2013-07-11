@@ -1,10 +1,18 @@
 {% load i18n %}
 
+<script type="text/javascript">
+  function go_add_page(value) {
+    if (value != '') {
+      window.location = value;
+    }
+  }
+</script>
+
 {% block wiki-add %}
-  <select name="add">
+  <select name="add" onchange="go_add_page(this.value)">
     <option value="">{% trans 'add' %}</option>
-    {% for wiki_model in wiki_models %}
-      <option value="">{{ wiki_model }}</option>
+    {% for wiki_url, wiki_model in wiki_models %}
+      <option value="{{ wiki_url }}">{{ wiki_model }}</option>
     {% endfor %}
   </select>
 {% endblock %}
