@@ -34,6 +34,10 @@ class BaseWikiView(object):
 class WikiListView(BaseWikiView, ListView):
     model = Wiki
 
+    def get_queryset(self):
+        qs = super(BaseWikiView, self).get_queryset()
+        return qs.filter(parent__is_null=True)
+
 
 class WikiDetailView(BaseWikiView, DetailView):
     model = Wiki
