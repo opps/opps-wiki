@@ -10,7 +10,7 @@ from django.utils.translation import ugettext_lazy as _
 
 from mptt.admin import MPTTModelAdmin
 
-from .models import Wiki
+from .models import Wiki, Suggestion
 from .templatetags.wiki_tags import admin_url
 
 
@@ -59,3 +59,12 @@ class WikiAdmin(reversion.VersionAdmin, MPTTModelAdmin):
         perms['show_app'] = self.model is Wiki
         return perms
 admin.site.register(Wiki, WikiAdmin)
+
+
+class SuggestionAdmin(admin.ModelAdmin):
+    list_display = ('content_type', 'content_object', 'user', 'status',
+                    'date_insert')
+
+    def has_add_permission(self, request):
+        return False
+admin.site.register(Suggestion, SuggestionAdmin)
