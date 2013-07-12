@@ -105,19 +105,6 @@ class Wiki(MPTTModel, NotUserPublishable, Slugged):
         )
 
 
-class WikiUser(models.Model):
-    user = models.OneToOneField(settings.AUTH_USER_MODEL,
-                                verbose_name=_(u'user'))
-    can_publish = models.BooleanField(_(u'can publish'), default=False)
-
-    class Meta:
-        verbose_name = _(u'wiki user')
-        verbose_name_plural = _(u'wiki users')
-
-    def __unicode__(self):
-        return u'{} - {}'.format(user, can_publish)
-
-
 class Suggestion(Owned, Date):
     STATUS_CHOICES = (
         ('pending', _(u'Pending')),
@@ -141,9 +128,17 @@ class Suggestion(Owned, Date):
     def publish(self, is_auto=False):
         if is_auto:
             self.status = 'auto'
+        else:
+            num = self.user.suggestion_set.filter(status='accept').count()
+            if num >= getattr(settings, 'USER_CAN_PUBLISH_NUMBER', 100):
+                p = Permission.objects.get_by_natural_key(
+                    'can_publish', 'wiki', 'wiki'
+                )
+                self.user.user_permissions.add(p.pk)
 
         suggested_data = pickle.loads(self.serialized_data)
         wiki_model = self.content_type.model_class()
+        wiki_model.published = True
         wiki_model(**suggested_data).save()
 
     def save(self, *args, **kwargs):

@@ -87,10 +87,7 @@ class WikiCreateView(BaseWikiView, CreateView):
         return modelform_factory(self.model, fields=self.model.PUBLIC_FIELDS)
 
     def form_valid(self, form):
-        # verify if user can publish
-        obj, created = WikiUser.objects.get_or_create(user=self.request.user)
-
-        Suggestion.objects.create(
+        suggestion = Suggestion.objects.create(
             user=self.request.user,
             title=form.cleaned_data['title'],
             content_type=ContentType.objects.get_for_model(self.model),
@@ -98,11 +95,11 @@ class WikiCreateView(BaseWikiView, CreateView):
             status='pending',
         )
 
-        if not created and obj.can_publish:
+        if self.request.user.has_perm('wiki.can_publish'):
             suggestion.publish(is_auto=True)
             return HttpResponseRedirect(self.success_published)
 
-        return HttpResponseRedirect(self.get_success_url())
+        return HttpResponseRedirect(self.success_url)
 
 class WikiUpdateView(BaseWikiView, UpdateView):
     model = Wiki
@@ -124,9 +121,6 @@ class WikiUpdateView(BaseWikiView, UpdateView):
         return modelform_factory(obj.__class__, fields=obj.PUBLIC_FIELDS)
 
     def form_valid(self, form):
-        # verify if wikiuser exists and can publish
-        obj, created = WikiUser.objects.get_or_create(user=self.request.user)
-
         suggestion = Suggestion.objects.create(
             user=self.request.user,
             title=form.cleaned_data['title'],
@@ -135,8 +129,8 @@ class WikiUpdateView(BaseWikiView, UpdateView):
             status='pending',
         )
 
-        if not created and obj.can_publish:
+        if self.request.user.has_perm('wiki.can_publish'):
             suggestion.publish(is_auto=True)
             return HttpResponseRedirect(self.success_published)
 
-        return HttpResponseRedirect(self.get_success_url())
+        return HttpResponseRedirect(self.success_url)
