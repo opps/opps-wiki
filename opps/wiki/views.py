@@ -99,8 +99,7 @@ class WikiCreateView(BaseWikiView, CreateView):
         )
 
         if not created and obj.can_publish:
-            suggestion.status = 'accept'
-            suggestion.save()
+            suggestion.publish(is_auto=True)
             return HttpResponseRedirect(self.success_published)
 
         return HttpResponseRedirect(self.get_success_url())
@@ -137,8 +136,7 @@ class WikiUpdateView(BaseWikiView, UpdateView):
         )
 
         if not created and obj.can_publish:
-            suggestion.status = 'accept'
-            suggestion.save()
+            suggestion.publish(is_auto=True)
             return HttpResponseRedirect(self.success_published)
 
         return HttpResponseRedirect(self.get_success_url())

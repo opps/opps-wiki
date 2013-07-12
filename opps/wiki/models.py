@@ -1,5 +1,7 @@
 # -*- coding: utf-8 -*-
 
+import pickle
+
 from django.contrib.contenttypes import generic
 from django.core.urlresolvers import reverse
 from django.db import models
@@ -116,7 +118,8 @@ class Suggestion(Owned, Date):
     STATUS_CHOICES = (
         ('pending', _(u'Pending')),
         ('reject', _(u'Reject')),
-        ('accept', _(u'Accept'))
+        ('accept', _(u'Accept')),
+        ('auto', _(u'Auto accepted')),
     )
     content_type = models.ForeignKey('contenttypes.ContentType')
     object_id = models.PositiveIntegerField(verbose_name='object name',
@@ -126,6 +129,23 @@ class Suggestion(Owned, Date):
     serialized_data = models.TextField(_(u'data'))
     status = models.CharField(_(u'status'), max_length=50,
                               choices=STATUS_CHOICES)
+
+    class Meta:
+        verbose_name = _(u'suggestion')
+        verbose_name_plural = _(u'suggestions')
+
+    def publish(self, is_auto=False):
+        if is_auto:
+            self.status = 'auto'
+
+        suggested_data = pickle.loads(self.serialized_data)
+        wiki_model = self.content_type.model_class()
+        wiki_model(**suggested_data).save()
+
+    def save(self, *args, **kwargs):
+        if self.status == 'accept':
+            self.publish()
+        super(Suggestion, self).save(*args, **kwargs)
 
     def __unicode__(self):
         return self.status
