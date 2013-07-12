@@ -14,6 +14,25 @@
 
 {% block content %}
 <h2>{{ suggestion_obj.content_type.name|capfirst }}</h2>
+<h3>Text {% trans 'View' %}</h3>
+<table>
+  <tr>
+    <th>{% trans 'Field' %}</th>
+    <th>{% trans 'Current' %}</th>
+    <th>{% trans 'Suggested' %}</th>
+    <th>{% trans 'Diff' %}</th>
+  </tr>
+  {% for field, original_value, suggested_value, diff in compare_data %}
+    <tr>
+      <th>{{ field }}</th>
+      <td>{{ original_value|linebreaks }}</td>
+      <td>{{ suggested_value|linebreaks }}</td>
+      <td>{{ diff|linebreaks }}</td>
+    </tr>
+  {% endfor %}
+</table>
+<br />
+<h3>HTML {% trans 'View' %}</h3>
 <table>
   <tr>
     <th>{% trans 'Field' %}</th>
