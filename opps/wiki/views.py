@@ -7,11 +7,14 @@ from django.contrib.sites.models import get_current_site
 from django.core.urlresolvers import reverse_lazy
 from django.forms.models import modelform_factory
 from django.db.models import get_model
-from django.http import Http404, HttpResponseRedirect
+from django.http import Http404, HttpResponse, HttpResponseRedirect
+from django.shortcuts import get_object_or_404
 from django.utils import timezone
-from django.views.generic import ListView, DetailView, CreateView, UpdateView
+from django.utils.translation import ugettext_lazy
+from django.views.generic import (ListView, DetailView, CreateView,
+                                  UpdateView, View)
 
-from .models import Suggestion, Wiki
+from .models import Suggestion, Wiki, Report
 
 
 class BaseWikiView(object):
@@ -134,3 +137,11 @@ class WikiUpdateView(BaseWikiView, UpdateView):
             return HttpResponseRedirect(self.success_published)
 
         return HttpResponseRedirect(self.success_url)
+
+
+class ReportCreateView(View):
+    def get(self, request):
+        pk = request.GET.get('wiki_pk', None)
+        wiki = get_object_or_404(Wiki, pk=pk)
+        Report.objects.create(wiki=wiki, user=request.user)
+        return HttpResponse(ugettext_lazy(u"Report successfully sent"))

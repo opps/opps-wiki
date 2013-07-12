@@ -8,6 +8,9 @@
   }
 </script>
 
+{% block extra_js %}{% endblock %}
+{% block extra_css %}{% endblock %}
+
 {% block wiki-add %}
   <select name="add" onchange="go_add_page(this.value)">
     <option value="">{% trans 'add' %}</option>
