@@ -88,16 +88,10 @@ class SuggestionAdmin(admin.ModelAdmin):
 
         compare_data = []
         for field in wiki_model.PUBLIC_FIELDS:
-            current_value = unicode(getattr(original_obj, field, '') or '')
+            cur_value = unicode(getattr(original_obj, field, '') or '')
             new_value = unicode(suggested_data.get(field, '') or '')
-            compare_data.append((
-                field,
-                current_value,
-                new_value,
-                ''.join(
-                    ndiff(current_value.splitlines(1), new_value.splitlines(1))
-                )
-            ))
+            diff = ndiff(cur_value.splitlines(1), new_value.splitlines(1))
+            compare_data.append((field, cur_value, new_value, ''.join(diff)))
 
         template_data = {
             'opts': self.model._meta,
@@ -107,5 +101,4 @@ class SuggestionAdmin(admin.ModelAdmin):
         }
 
         return render(request, 'admin/suggestion_form.html', template_data)
-
 admin.site.register(Suggestion, SuggestionAdmin)
