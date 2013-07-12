@@ -148,3 +148,12 @@ class Suggestion(Owned, Date):
 
     def __unicode__(self):
         return self.status
+
+
+class Report(Owned, Date):
+    wiki = models.ForeignKey('Wiki', verbose_name=_(u'wiki'))
+
+    class Meta:
+        verbose_name = _(u'report')
+        verbose_name_plural = _(u'reports')
+        unique_together = ('user', 'wiki')
