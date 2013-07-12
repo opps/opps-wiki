@@ -99,6 +99,19 @@ class Wiki(MPTTModel, NotUserPublishable, Slugged):
         )
 
 
+class WikiUser(models.Model):
+    user = models.OneToOneField(settings.AUTH_USER_MODEL,
+                                verbose_name=_(u'user'))
+    can_publish = models.BooleanField(_(u'can publish'), default=False)
+
+    class Meta:
+        verbose_name = _(u'wiki user')
+        verbose_name_plural = _(u'wiki users')
+
+    def __unicode__(self):
+        return u'{} - {}'.format(user, can_publish)
+
+
 class Suggestion(Owned, Date):
     STATUS_CHOICES = (
         ('pending', _(u'Pending')),
