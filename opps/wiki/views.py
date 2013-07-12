@@ -4,9 +4,10 @@ import pickle
 
 from django.contrib.contenttypes.models import ContentType
 from django.contrib.sites.models import get_current_site
+from django.core.urlresolvers import reverse_lazy
 from django.forms.models import modelform_factory
 from django.db.models import get_model
-from django.http import Http404
+from django.http import Http404, HttpResponseRedirect
 from django.utils import timezone
 from django.views.generic import ListView, DetailView, CreateView, UpdateView
 
@@ -69,7 +70,8 @@ class WikiDetailView(BaseWikiView, DetailView):
 
 
 class WikiCreateView(BaseWikiView, CreateView):
-    success_url = None
+    success_url = reverse_lazy('success_suggestion_msg')
+    success_published = reverse_lazy('success_published_msg')
 
     @property
     def model(self):
@@ -85,6 +87,9 @@ class WikiCreateView(BaseWikiView, CreateView):
         return modelform_factory(self.model, fields=self.model.PUBLIC_FIELDS)
 
     def form_valid(self, form):
+        # verify if user can publish
+        obj, created = WikiUser.objects.get_or_create(user=self.request.user)
+
         Suggestion.objects.create(
             user=self.request.user,
             title=form.cleaned_data['title'],
@@ -93,9 +98,17 @@ class WikiCreateView(BaseWikiView, CreateView):
             status='pending',
         )
 
+        if not created and obj.can_publish:
+            suggestion.status = 'accept'
+            suggestion.save()
+            return HttpResponseRedirect(self.success_published)
+
+        return HttpResponseRedirect(self.get_success_url())
+
 class WikiUpdateView(BaseWikiView, UpdateView):
     model = Wiki
-    success_url = None
+    success_url = reverse_lazy('success_suggestion_msg')
+    success_published = reverse_lazy('success_published_msg')
     slug_field = 'long_slug'
     slug_url_kwarg = 'long_slug'
 
@@ -112,10 +125,20 @@ class WikiUpdateView(BaseWikiView, UpdateView):
         return modelform_factory(obj.__class__, fields=obj.PUBLIC_FIELDS)
 
     def form_valid(self, form):
-        Suggestion.objects.create(
+        # verify if wikiuser exists and can publish
+        obj, created = WikiUser.objects.get_or_create(user=self.request.user)
+
+        suggestion = Suggestion.objects.create(
             user=self.request.user,
             title=form.cleaned_data['title'],
             content_object=self.get_object(),
             serialized_data=pickle.dumps(form.cleaned_data),
             status='pending',
         )
+
+        if not created and obj.can_publish:
+            suggestion.status = 'accept'
+            suggestion.save()
+            return HttpResponseRedirect(self.success_published)
+
+        return HttpResponseRedirect(self.get_success_url())
