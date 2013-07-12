@@ -1,11 +1,17 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 import reversion
+import pickle
 
-from django.contrib import admin
+from difflib import ndiff
+
 from django import forms
-from django.shortcuts import get_object_or_404
-from django.http import HttpResponseRedirect
+from django.forms.models import modelform_factory
+from django.core.exceptions import PermissionDenied
+from django.contrib import admin
+from django.contrib.admin.util import unquote
+from django.shortcuts import get_object_or_404, render
+from django.http import Http404, HttpResponseRedirect, HttpResponse
 from django.utils.translation import ugettext_lazy as _
 
 from mptt.admin import MPTTModelAdmin
@@ -67,4 +73,39 @@ class SuggestionAdmin(admin.ModelAdmin):
 
     def has_add_permission(self, request):
         return False
+
+    def change_view(self, request, object_id, form_url='', extra_context=None):
+        obj = self.get_object(request, unquote(object_id))
+        if not self.has_change_permission(request, obj):
+            raise PermissionDenied
+
+        if obj is None:
+            raise Http404()
+
+        suggested_data = pickle.loads(obj.serialized_data)
+        wiki_model = obj.content_type.model_class()
+        original_obj = obj.content_object
+
+        compare_data = []
+        for field in wiki_model.PUBLIC_FIELDS:
+            current_value = unicode(getattr(original_obj, field, ''))
+            new_value = unicode(suggested_data.get(field))
+            compare_data.append((
+                field,
+                current_value,
+                new_value,
+                ''.join(
+                    ndiff(current_value.splitlines(), new_value.splitlines())
+                )
+            ))
+
+        template_data = {
+            'opts': self.model._meta,
+            'has_change_permission': self.has_change_permission(request, obj),
+            'suggestion_obj': obj,
+            'compare_data': compare_data,
+        }
+
+        return render(request, 'admin/suggestion_form.html', template_data)
+
 admin.site.register(Suggestion, SuggestionAdmin)
