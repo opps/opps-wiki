@@ -2,6 +2,7 @@
 
 import pickle
 
+from django.contrib.auth.models import Permission
 from django.contrib.contenttypes import generic
 from django.core.urlresolvers import reverse
 from django.db import models
@@ -55,6 +56,9 @@ class Wiki(MPTTModel, NotUserPublishable, Slugged):
         db_index=True,
         editable=False
     )
+
+    class Meta:
+        permissions = (('can_publish', _(u'User can publish automatically')),)
 
     def __unicode__(self):
         return self.title
