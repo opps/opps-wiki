@@ -12,6 +12,7 @@ def admin_url(model, page, *args, **kwargs):
     """
     Tag to return admin url of given model
     """
+
     try:
         return reverse('admin:{}_{}_{}'.format(
             model._meta.app_label,

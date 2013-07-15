@@ -2,7 +2,7 @@
 from django.db import models
 from django.utils.translation import ugettext_lazy as _
 
-from opps.wiki.models import Wiki
+from opps.wiki.models import Wiki, WikiInline
 
 
 class Genre(models.Model):
@@ -10,14 +10,6 @@ class Genre(models.Model):
 
     def __unicode__(self):
         return self.name
-
-
-class Embed(models.Model):
-    musician = models.ForeignKey('Musician', verbose_name=_(u'musician'))
-    embed = models.TextField(_(u'embed'))
-
-    def __unicode__(self):
-        return self.embed
 
 
 class Musician(Wiki):
@@ -30,6 +22,10 @@ class Musician(Wiki):
     birthday = models.DateField(_(u'birthday'))
     type = models.CharField(_(u'type'), max_length=10, choices=TYPE_CHOICES)
     end = models.DateField(_(u'end/death'), null=True, blank=True)
+
+    class Meta:
+        verbose_name = _(u'musician')
+        verbose_name_plural = _(u'musician')
 
     def __unicode__(self):
         return self.title
@@ -46,9 +42,32 @@ class Album(Wiki):
                                     null=True, blank=True)
     year = models.PositiveSmallIntegerField(_(u'year'))
 
+    class Meta:
+        verbose_name = _(u'musician album')
+        verbose_name_plural = (u'musician albums')
+
     def save(self, *args, **kwargs):
-        self.parent = self.musician
+        self.parent_id = self.musician_id
         super(Album, self).save(*args, **kwargs)
 
     def __unicode__(self):
         return self.name
+
+
+class Embed(WikiInline):
+    musician = models.ForeignKey('Musician', verbose_name=_(u'musician'))
+    embed_text = models.TextField(_(u'embed'))
+
+    PUBLIC_FIELDS = ('title', 'musician', 'embed')
+
+    class Meta:
+        verbose_name = _(u'musician embed')
+        verbose_name_plural = _(u'musician embeds')
+
+    def __unicode__(self):
+        return self.embed_text
+
+    def save(self, *args, **kwargs):
+        self.parent_id = self.musician_id
+        self.published = True
+        super(Embed, self).save(*args, **kwargs)
