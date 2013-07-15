@@ -29,7 +29,7 @@
     <h3>{{ object.title }} |
       <span>
         <a href="{% url 'wiki-edit' object.long_slug %}">{% trans 'Edit' %}</a>
-      </span>{% if request.user.is_authenticated %}|
+      </span>{% if request.user.is_authenticated and request.user not in object.get_report_users %}|
       <span>
         <a class="wiki_report" href="javascript:void(0);" rel="{{ object.pk }}">{% trans 'Report' %}</a>
         <span class="status"></span>
