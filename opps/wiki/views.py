@@ -93,14 +93,15 @@ class WikiCreateView(BaseWikiView, CreateView):
     def form_valid(self, form):
         self.object = form.save(commit=False)
         # Generate files
-        for field in self.object.__class__._meta.fields:
+        for field in self.object._meta.fields:
             if isinstance(field, FileField):
                 obj_field = getattr(self.object, field.name)
-                obj_field.save(
-                    obj_field.path,
-                    ContentFile(obj_field.read()),
-                    save=False
-                )
+                if obj_field:
+                    obj_field.save(
+                        obj_field.path,
+                        ContentFile(obj_field.read()),
+                        save=False
+                    )
 
         suggestion = Suggestion.objects.create(
             user=self.request.user,
@@ -139,14 +140,15 @@ class WikiUpdateView(BaseWikiView, UpdateView):
     def form_valid(self, form):
         self.object = form.save(commit=False)
         # Generate files
-        for field in self.object.__class__._meta.fields:
+        for field in self.object._meta.fields:
             if isinstance(field, FileField):
                 obj_field = getattr(self.object, field.name)
-                obj_field.save(
-                    obj_field.path,
-                    ContentFile(obj_field.read()),
-                    save=False
-                )
+                if obj_field:
+                    obj_field.save(
+                        obj_field.path,
+                        ContentFile(obj_field.read()),
+                        save=False
+                    )
         suggestion = Suggestion.objects.create(
             user=self.request.user,
             title=form.cleaned_data['title'],
