@@ -58,6 +58,8 @@ class Wiki(MPTTModel, NotUserPublishable, Slugged):
         editable=False
     )
 
+    inline = models.BooleanField(_(u'inline'), default=False, editable=False)
+
     class Meta:
         permissions = (('can_publish', _(u'User can publish automatically')),)
 
@@ -88,8 +90,10 @@ class Wiki(MPTTModel, NotUserPublishable, Slugged):
     def get_wiki_models(cls):
         # Get wiki subclasses
         if not hasattr(cls, '_wiki_models'):
-            cls._wiki_models = [m for m in get_models() if m is not Wiki
-                                and issubclass(m, Wiki)]
+            cls._wiki_models = [
+                m for m in get_models() if m not in (Wiki, WikiInline)
+                and issubclass(m, Wiki)
+            ]
         return cls._wiki_models
 
     def get_child_object(self):
@@ -102,7 +106,8 @@ class Wiki(MPTTModel, NotUserPublishable, Slugged):
     def get_published_children(self):
         return self.get_children().filter(
             published=True,
-            date_available__lte=timezone.now()
+            date_available__lte=timezone.now(),
+            inline=False
         )
 
     def get_report_users(self):
@@ -112,6 +117,12 @@ class Wiki(MPTTModel, NotUserPublishable, Slugged):
     def get_voting_users(self):
         user_model = get_user_model()
         return user_model.objects.filter(voting__wiki_id=self.pk)
+
+class WikiInline(Wiki):
+    def save(self, *args, **kwargs):
+        self.inline = True
+        self.published = True
+        super(WikiInline, self).save(*args, **kwargs)
 
 
 class Suggestion(Owned, Date):
@@ -138,6 +149,7 @@ class Suggestion(Owned, Date):
         if is_auto:
             self.status = 'auto'
         else:
+            self.status = 'accept'
             num = self.user.suggestion_set.filter(status='accept').count()
             if num >= getattr(settings, 'USER_CAN_PUBLISH_NUMBER', 100):
                 p = Permission.objects.get_by_natural_key(
@@ -148,11 +160,11 @@ class Suggestion(Owned, Date):
         suggested_obj = pickle.loads(self.serialized_data)
         suggested_obj.published = True
         suggested_obj.save()
+        self.save()
 
-    def save(self, *args, **kwargs):
-        if self.status == 'accept':
-            self.publish()
-        super(Suggestion, self).save(*args, **kwargs)
+    def reject(self):
+        self.status = 'reject'
+        self.save()
 
     def __unicode__(self):
         return self.status

@@ -28,7 +28,8 @@ class BaseWikiView(object):
         return qs.filter(
             site=self.get_site(),
             published=True,
-            date_available__lte=timezone.now()
+            date_available__lte=timezone.now(),
+            inline=False
         )
 
     def get_template_names(self):

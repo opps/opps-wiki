@@ -8,7 +8,7 @@ from difflib import ndiff
 from django import forms
 from django.forms.models import modelform_factory
 from django.core.exceptions import PermissionDenied
-from django.contrib import admin
+from django.contrib import admin, messages
 from django.contrib.admin.util import unquote
 from django.shortcuts import get_object_or_404, render
 from django.http import Http404, HttpResponseRedirect, HttpResponse
@@ -23,7 +23,7 @@ from .templatetags.wiki_tags import admin_url
 class WikiAdmin(reversion.VersionAdmin, MPTTModelAdmin):
 
     change_list_template = "admin/wiki/wiki/change_list.html"
-    list_display = ('title', 'parent', 'long_slug', 'published')
+    list_display = ('title', 'parent', 'child_class', 'long_slug', 'published')
     mptt_indent_field = "title"
 
     @property
@@ -81,6 +81,25 @@ class SuggestionAdmin(admin.ModelAdmin):
 
         if obj is None:
             raise Http404()
+
+        if request.method == 'POST':
+            accept = request.POST.get('accept')
+            reject = request.POST.get('reject')
+            if accept:
+                obj.publish()
+                self.message_user(
+                    request,
+                    _(u'Suggestion published successfully'),
+                    messages.SUCCESS
+                )
+            elif reject:
+                obj.reject()
+                self.message_user(
+                    request,
+                    _(u'Suggestion rejected successfully'),
+                    messages.SUCCESS
+                )
+            return HttpResponseRedirect(admin_url(Suggestion, "changelist"))
 
         suggested_obj = pickle.loads(obj.serialized_data)
         wiki_model = obj.content_type.model_class()
