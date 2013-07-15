@@ -1,0 +1,269 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2013-07-15 15:56-0300\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+
+#: admin.py:92
+msgid "Suggestion published successfully"
+msgstr "Sugestão publicada com sucesso"
+
+#: admin.py:99
+msgid "Suggestion rejected successfully"
+msgstr "Sugestão rejeitada com sucesso"
+
+#: models.py:29 models.py:138
+msgid "title"
+msgstr "título"
+
+#: models.py:36
+msgid "child class"
+msgstr "classe filha"
+
+#: models.py:42
+msgid "child app label"
+msgstr ""
+
+#: models.py:55
+msgid "Path name"
+msgstr "Nome do caminho"
+
+#: models.py:61
+msgid "inline"
+msgstr "incorporado"
+
+#: models.py:64
+msgid "User can publish automatically"
+msgstr "Usuário pode publicar automaticamente"
+
+#: models.py:130
+msgid "Pending"
+msgstr "Pendente"
+
+#: models.py:131 templates/admin/suggestion_form.html:56
+msgid "Reject"
+msgstr "Rejeitar"
+
+#: models.py:132 templates/admin/suggestion_form.html:55
+msgid "Accept"
+msgstr "Aceitar"
+
+#: models.py:133
+msgid "Auto accepted"
+msgstr "Aceito automaticamente"
+
+#: models.py:140
+msgid "data"
+msgstr "dados"
+
+#: models.py:141
+msgid "status"
+msgstr "condição"
+
+#: models.py:145
+msgid "suggestion"
+msgstr "sugestão"
+
+#: models.py:146
+msgid "suggestions"
+msgstr "sugestões"
+
+#: models.py:174 models.py:184
+msgid "wiki"
+msgstr "wiki"
+
+#: models.py:177
+msgid "report"
+msgstr "Denúncia"
+
+#: models.py:178
+msgid "reports"
+msgstr "Denúncias"
+
+#: models.py:183
+msgid "liked"
+msgstr "curti"
+
+#: models.py:183
+msgid "disliked"
+msgstr "não curti"
+
+#: models.py:187
+msgid "vote"
+msgstr "voto"
+
+#: views.py:174
+msgid "Report successfully sent"
+msgstr "Denúncia enviada com sucesso"
+
+#: views.py:185
+msgid "Voted successfully"
+msgstr "Votado com sucesso"
+
+#: contrib/musicians/models.py:9 contrib/musicians/models.py:37
+msgid "name"
+msgstr "nome"
+
+#: contrib/musicians/models.py:17
+msgid "Artist"
+msgstr "Artista"
+
+#: contrib/musicians/models.py:17
+msgid "Band"
+msgstr "Banda"
+
+#: contrib/musicians/models.py:18
+msgid "biography"
+msgstr "biografia"
+
+#: contrib/musicians/models.py:21
+msgid "genre"
+msgstr "gênero"
+
+#: contrib/musicians/models.py:22
+msgid "birthday"
+msgstr "aniversário"
+
+#: contrib/musicians/models.py:23
+msgid "type"
+msgstr "tipo"
+
+#: contrib/musicians/models.py:24
+msgid "end/death"
+msgstr "término/morte"
+
+#: contrib/musicians/models.py:27 contrib/musicians/models.py:28
+#: contrib/musicians/models.py:39 contrib/musicians/models.py:58
+msgid "musician"
+msgstr "músico"
+
+#: contrib/musicians/models.py:38
+msgid "tracks"
+msgstr "faixas"
+
+#: contrib/musicians/models.py:40
+msgid "thumbnail"
+msgstr "miniatura"
+
+#: contrib/musicians/models.py:41
+msgid "record label"
+msgstr "gravadora"
+
+#: contrib/musicians/models.py:43
+msgid "year"
+msgstr "ano"
+
+#: contrib/musicians/models.py:46
+msgid "musician album"
+msgstr "álbum do músico"
+
+#: contrib/musicians/models.py:59
+msgid "embed"
+msgstr ""
+
+#: contrib/musicians/models.py:64
+msgid "musician embed"
+msgstr "embed do músico"
+
+#: contrib/musicians/models.py:65
+msgid "musician embeds"
+msgstr "embeds do músico"
+
+#: contrib/musicians/templates/musicians/musician_detail.html:13
+msgid "There is no embed yet."
+msgstr "Não há embed ainda."
+
+#: contrib/pages/models.py:10
+msgid "content"
+msgstr "conteúdo"
+
+#: templates/admin/suggestion_form.html:8
+msgid "Home"
+msgstr "Início"
+
+#: templates/admin/suggestion_form.html:11
+msgid "Add"
+msgstr "Adicionar"
+
+#: templates/admin/suggestion_form.html:17
+#: templates/admin/suggestion_form.html:35
+msgid "View"
+msgstr "Visualizar"
+
+#: templates/admin/suggestion_form.html:20
+#: templates/admin/suggestion_form.html:38
+msgid "Field"
+msgstr "Campo"
+
+#: templates/admin/suggestion_form.html:21
+#: templates/admin/suggestion_form.html:39
+msgid "Current"
+msgstr "Atual"
+
+#: templates/admin/suggestion_form.html:22
+#: templates/admin/suggestion_form.html:40
+msgid "Suggested"
+msgstr "Sugerido"
+
+#: templates/admin/suggestion_form.html:23
+#: templates/admin/suggestion_form.html:41
+msgid "Diff"
+msgstr "Diferenças"
+
+#: templates/admin/wiki/wiki/change_list.html:46
+#: templates/wiki/wiki_base.html:16
+msgid "add"
+msgstr "adicionar"
+
+#: templates/wiki/success_msg.html:2
+msgid ""
+"Congratulations! Your suggestion was successfully sent and it's waiting for "
+"approval"
+msgstr "Parabéns! Sua sugestão foi enviada com sucesso e está aguardando "
+"aprovação"
+
+#: templates/wiki/success_published.html:2
+msgid "Your suggestion is published."
+msgstr "Sua sugestão está publicada."
+
+#: templates/wiki/wiki_detail.html:21 templates/wiki/wiki_detail.html.py:39
+msgid "Something went wrong. Try again."
+msgstr "Ocorreu algo errado. Tente novamente."
+
+#: templates/wiki/wiki_detail.html:52
+msgid "Edit"
+msgstr "Editar"
+
+#: templates/wiki/wiki_detail.html:55
+msgid "Report"
+msgstr "Denunciar"
+
+#: templates/wiki/wiki_detail.html:62
+msgid "Like"
+msgstr "Curtir"
+
+#: templates/wiki/wiki_detail.html:62
+msgid "Dislike"
+msgstr "Não curtir"
+
+#: templates/wiki/wiki_detail.html:74
+msgid "Sub Pages"
+msgstr "Sub páginas"
+
+#: templates/wiki/wiki_form.html:10
+msgid "Submit"
+msgstr "Enviar"
