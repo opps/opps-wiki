@@ -58,7 +58,7 @@ class Embed(WikiInline):
     musician = models.ForeignKey('Musician', verbose_name=_(u'musician'))
     embed_text = models.TextField(_(u'embed'))
 
-    PUBLIC_FIELDS = ('title', 'musician', 'embed')
+    PUBLIC_FIELDS = ('title', 'musician', 'embed_text')
 
     class Meta:
         verbose_name = _(u'musician embed')
