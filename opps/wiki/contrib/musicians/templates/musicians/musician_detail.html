@@ -1,0 +1,8 @@
+{% extends "wiki/wiki_detail.html" %}
+
+{% block content %}
+  {{ object.biography|safe }}
+  {% if object.genre %}{{ object.genre }}{% endif %}
+  {{ object.birthday }}
+  {% if object.end %}{{ object.end }}{% endif %}
+{% endblock %}
