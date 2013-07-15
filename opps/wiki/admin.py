@@ -68,7 +68,7 @@ admin.site.register(Wiki, WikiAdmin)
 
 
 class SuggestionAdmin(admin.ModelAdmin):
-    list_display = ('content_type', 'title', 'content_object', 'user',
+    list_display = ('title', 'content_type', 'content_object', 'user',
                     'status', 'date_insert')
 
     def has_add_permission(self, request):
@@ -82,14 +82,14 @@ class SuggestionAdmin(admin.ModelAdmin):
         if obj is None:
             raise Http404()
 
-        suggested_data = pickle.loads(obj.serialized_data)
+        suggested_obj = pickle.loads(obj.serialized_data)
         wiki_model = obj.content_type.model_class()
         original_obj = obj.content_object
 
         compare_data = []
         for field in wiki_model.PUBLIC_FIELDS:
             cur_value = unicode(getattr(original_obj, field, '') or '')
-            new_value = unicode(suggested_data.get(field, '') or '')
+            new_value = unicode(getattr(suggested_obj, field, '') or '')
             diff = ndiff(cur_value.splitlines(1), new_value.splitlines(1))
             compare_data.append((field, cur_value, new_value, ''.join(diff)))
 

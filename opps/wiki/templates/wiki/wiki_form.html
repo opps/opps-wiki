@@ -2,7 +2,7 @@
 {% load i18n %}
 
 {% block wiki-base-content %}
-  <form method="POST">
+  <form method="POST" enctype="multipart/form-data">
     {% csrf_token %}
     <table>
       {{ form.as_table }}

@@ -115,7 +115,7 @@ class Suggestion(Owned, Date):
     content_type = models.ForeignKey('contenttypes.ContentType')
     object_id = models.PositiveIntegerField(verbose_name='object name',
                                             null=True)
-    title=models.CharField(_(u'title'), max_length=140)
+    title = models.CharField(_(u'title'), max_length=140)
     content_object = generic.GenericForeignKey()
     serialized_data = models.TextField(_(u'data'))
     status = models.CharField(_(u'status'), max_length=50,
@@ -136,10 +136,9 @@ class Suggestion(Owned, Date):
                 )
                 self.user.user_permissions.add(p.pk)
 
-        suggested_data = pickle.loads(self.serialized_data)
-        wiki_model = self.content_type.model_class()
-        wiki_model.published = True
-        wiki_model(**suggested_data).save()
+        suggested_obj = pickle.loads(self.serialized_data)
+        suggested_obj.published = True
+        suggested_obj.save()
 
     def save(self, *args, **kwargs):
         if self.status == 'accept':

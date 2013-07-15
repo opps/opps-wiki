@@ -49,8 +49,9 @@
     </tr>
   {% endfor %}
 </table>
-
+{% if suggestion_obj.status == 'pending' %}
 <input type="submit" name="accept" value="{% trans 'Accept' %}">
 <input type="submit" name="reject" value="{% trans 'Reject' %}">
+{% endif %}
 
 {% endblock %}

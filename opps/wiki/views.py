@@ -5,8 +5,9 @@ import pickle
 from django.contrib.contenttypes.models import ContentType
 from django.contrib.sites.models import get_current_site
 from django.core.urlresolvers import reverse_lazy
+from django.core.files.base import ContentFile
 from django.forms.models import modelform_factory
-from django.db.models import get_model
+from django.db.models import get_model, FileField
 from django.http import Http404, HttpResponse, HttpResponseRedirect
 from django.shortcuts import get_object_or_404
 from django.utils import timezone
@@ -19,7 +20,7 @@ from .models import Suggestion, Wiki, Report
 
 class BaseWikiView(object):
     def get_site(self):
-         return get_current_site(self.request)
+        return get_current_site(self.request)
 
     def get_queryset(self):
         qs = super(BaseWikiView, self).get_queryset()
@@ -45,7 +46,7 @@ class BaseWikiView(object):
 
     def get_context_data(self, **kwargs):
         context = super(BaseWikiView, self).get_context_data(**kwargs)
-        context['wiki_models'] = [(w.add_url(), w._meta.verbose_name) for w \
+        context['wiki_models'] = [(w.add_url(), w._meta.verbose_name) for w
                                   in Wiki.get_wiki_models()]
         return context
 
@@ -90,11 +91,22 @@ class WikiCreateView(BaseWikiView, CreateView):
         return modelform_factory(self.model, fields=self.model.PUBLIC_FIELDS)
 
     def form_valid(self, form):
+        self.object = form.save(commit=False)
+        # Generate files
+        for field in self.object.__class__._meta.fields:
+            if isinstance(field, FileField):
+                obj_field = getattr(self.object, field.name)
+                obj_field.save(
+                    obj_field.path,
+                    ContentFile(obj_field.read()),
+                    save=False
+                )
+
         suggestion = Suggestion.objects.create(
             user=self.request.user,
             title=form.cleaned_data['title'],
             content_type=ContentType.objects.get_for_model(self.model),
-            serialized_data=pickle.dumps(form.cleaned_data),
+            serialized_data=pickle.dumps(self.object),
             status='pending',
         )
 
@@ -103,6 +115,7 @@ class WikiCreateView(BaseWikiView, CreateView):
             return HttpResponseRedirect(self.success_published)
 
         return HttpResponseRedirect(self.success_url)
+
 
 class WikiUpdateView(BaseWikiView, UpdateView):
     model = Wiki
@@ -124,11 +137,21 @@ class WikiUpdateView(BaseWikiView, UpdateView):
         return modelform_factory(obj.__class__, fields=obj.PUBLIC_FIELDS)
 
     def form_valid(self, form):
+        self.object = form.save(commit=False)
+        # Generate files
+        for field in self.object.__class__._meta.fields:
+            if isinstance(field, FileField):
+                obj_field = getattr(self.object, field.name)
+                obj_field.save(
+                    obj_field.path,
+                    ContentFile(obj_field.read()),
+                    save=False
+                )
         suggestion = Suggestion.objects.create(
             user=self.request.user,
             title=form.cleaned_data['title'],
-            content_object=self.get_object(),
-            serialized_data=pickle.dumps(form.cleaned_data),
+            content_type=ContentType.objects.get_for_model(self.model),
+            serialized_data=pickle.dumps(self.object),
             status='pending',
         )
 
