@@ -2,6 +2,7 @@
 
 import pickle
 
+from django.contrib.auth import get_user_model
 from django.contrib.auth.models import Permission
 from django.contrib.contenttypes import generic
 from django.core.urlresolvers import reverse
@@ -103,6 +104,11 @@ class Wiki(MPTTModel, NotUserPublishable, Slugged):
             published=True,
             date_available__lte=timezone.now()
         )
+
+    def get_report_users(self):
+        user_model = get_user_model()
+        return user_model.objects.filter(report__wiki_id=self.pk)
+
 
 
 class Suggestion(Owned, Date):
