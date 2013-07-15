@@ -109,6 +109,9 @@ class Wiki(MPTTModel, NotUserPublishable, Slugged):
         user_model = get_user_model()
         return user_model.objects.filter(report__wiki_id=self.pk)
 
+    def get_voting_users(self):
+        user_model = get_user_model()
+        return user_model.objects.filter(voting__wiki_id=self.pk)
 
 
 class Suggestion(Owned, Date):
@@ -162,3 +165,22 @@ class Report(Owned, Date):
         verbose_name = _(u'report')
         verbose_name_plural = _(u'reports')
         unique_together = ('user', 'wiki')
+
+
+class Voting(Owned, Date):
+    VOTE_CHOICES = ((1, _(u'liked')), (-1, _(u'disliked')))
+    wiki= models.ForeignKey('wiki.Wiki', verbose_name=_(u'wiki'))
+    vote = models.SmallIntegerField(
+        choices=VOTE_CHOICES,
+        verbose_name=_(u'vote')
+    )
+
+    class Meta:
+        unique_together = ('user', 'wiki')
+
+    def __unicode__(self):
+        for choice in self.VOTE_CHOICES:
+            if self.vote == choice[0]:
+                option_chosen = choice[1]
+        return u'"{}" was {} by {}'.format(self.wiki, option_chosen,
+                                           self.user)

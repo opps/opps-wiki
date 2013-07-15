@@ -8,14 +8,15 @@ from django.core.urlresolvers import reverse_lazy
 from django.core.files.base import ContentFile
 from django.forms.models import modelform_factory
 from django.db.models import get_model, FileField
-from django.http import Http404, HttpResponse, HttpResponseRedirect
+from django.http import (Http404, HttpResponse, HttpResponseRedirect,
+                         HttpResponseBadRequest)
 from django.shortcuts import get_object_or_404
 from django.utils import timezone
 from django.utils.translation import ugettext_lazy
 from django.views.generic import (ListView, DetailView, CreateView,
                                   UpdateView, View)
 
-from .models import Suggestion, Wiki, Report
+from .models import Suggestion, Wiki, Report, Voting
 
 
 class BaseWikiView(object):
@@ -170,3 +171,14 @@ class ReportCreateView(View):
         wiki = get_object_or_404(Wiki, pk=pk)
         Report.objects.create(wiki=wiki, user=request.user)
         return HttpResponse(ugettext_lazy(u"Report successfully sent"))
+
+
+class VotingView(View):
+    def get(self, request):
+        pk = request.GET.get('wiki_pk', None)
+        wiki = get_object_or_404(Wiki, pk=pk)
+        option = request.GET.get('vote', None)
+        if not option:
+            return HttpResponseBadRequest()
+        Voting.objects.create(wiki=wiki, user=request.user, vote=option)
+        return HttpResponse(ugettext_lazy(u"Voted successfully"))

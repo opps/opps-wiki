@@ -6,7 +6,7 @@ from django.views.generic import TemplateView
 from django.contrib import admin
 
 from .views import (WikiListView, WikiDetailView, WikiCreateView,
-                    WikiUpdateView, ReportCreateView)
+                    WikiUpdateView, ReportCreateView, VotingView)
 
 
 admin.site.index_template = 'admin/opps_admin_index.html'
@@ -32,6 +32,8 @@ urlpatterns = patterns(
     url(r'^success_published/$',
         TemplateView.as_view(template_name='wiki/success_published.html'),
         name='success_published_msg'),
+
+    url(r'^voting/$', VotingView.as_view(), name='wiki-voting'),
 
     url(r'^(?P<long_slug>[\w//-]+)/$',
         cache_page(settings.OPPS_CACHE_EXPIRE)(WikiDetailView.as_view()),

@@ -7,18 +7,39 @@
   <script type="text/javascript">
     $(function () {
       $('.wiki_report').click(function() {
+        var $report = $(this).parent();
         var request = $.ajax({
           url: "{% url 'wiki-report' %}",
           type: "GET",
           data: {'wiki_pk': $(this).attr('rel')},
         });
         request.done(function ( data ) {
-          $('.status').empty().append(data);
+          $('.wiki_report').remove();
+          $report.find('.status').empty().append(data);
         });
         request.fail(function ( data ) {
-          $('.status').empty().append("{% trans 'Something went wrong. Try again.' %}");
+          $report.find('.status').empty().append("{% trans 'Something went wrong. Try again.' %}");
         });
       });
+
+      $('.wiki_voting').click(function() {
+        var $voting = $(this).parent();
+        var request = $.ajax({
+          url: "{% url 'wiki-voting' %}",
+          type: "GET",
+          data: {
+            'wiki_pk': $(this).parent().attr('rel'),
+            'vote': $(this).attr('rel'),
+          },
+        });
+        request.done(function ( data ) {
+          $voting.find('.status').empty().append(data);
+        });
+        request.fail(function ( data ) {
+          $voting.find('.status').empty().append("{% trans 'Something went wrong. Try again.' %}");
+        });
+      });
+
     });
   </script>
 {% endblock %}
@@ -36,6 +57,12 @@
       </span>
       {% endif %}
     </h3>
+    {% if request.user.is_authenticated and request.user not in object.get_voting_users %}
+      <span style="font-size:11px;" rel="{{ object.pk }}">
+        <a href="javascript:void(0);" rel="1" class="wiki_voting">{% trans 'Like' %}</a> | <a href="javascript:void(0);" rel="-1" class="wiki_voting">{% trans 'Dislike' %}</a>
+        <span class="status"></span>
+      </span>
+    {% endif %}
   {% endblock %}
 
   {% block content %}
