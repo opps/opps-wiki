@@ -1,6 +1,7 @@
 {% extends "wiki/wiki_base.html" %}
 {% load i18n %}
 
+{% if request.user.is_authenticated %}
 {% block extra_js %}
   <script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.1/jquery.min.js"></script>
   <script type="text/javascript">
@@ -21,17 +22,19 @@
     });
   </script>
 {% endblock %}
+{% endif %}
 
 {% block wiki-base-content %}
   {% block wiki-title %}
     <h3>{{ object.title }} |
       <span>
         <a href="{% url 'wiki-edit' object.long_slug %}">{% trans 'Edit' %}</a>
-      </span>|
+      </span>{% if request.user.is_authenticated %}|
       <span>
         <a class="wiki_report" href="javascript:void(0);" rel="{{ object.pk }}">{% trans 'Report' %}</a>
         <span class="status"></span>
       </span>
+      {% endif %}
     </h3>
   {% endblock %}
 
