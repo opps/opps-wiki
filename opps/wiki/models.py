@@ -6,12 +6,14 @@ from django.contrib.auth import get_user_model
 from django.contrib.auth.models import Permission
 from django.contrib.contenttypes import generic
 from django.core.urlresolvers import reverse
+from django.core.mail import send_mail
 from django.db import models
 from django.db.models import get_model, get_models
 from django.conf import settings
 from django.utils.translation import ugettext_lazy as _
 from django.utils.text import slugify
 from django.utils import timezone
+from django.template.loader import render_to_string
 
 from mptt.models import MPTTModel, TreeForeignKey
 from taggit.models import TaggedItemBase
@@ -118,6 +120,7 @@ class Wiki(MPTTModel, NotUserPublishable, Slugged):
         user_model = get_user_model()
         return user_model.objects.filter(voting__wiki_id=self.pk)
 
+
 class WikiInline(Wiki):
     def save(self, *args, **kwargs):
         self.inline = True
@@ -145,6 +148,40 @@ class Suggestion(Owned, Date):
         verbose_name = _(u'suggestion')
         verbose_name_plural = _(u'suggestions')
 
+    def save(self, *args, **kwargs):
+        if not self.pk:
+            # Send e-mail to user
+            email_subject = render_to_string(
+                'wiki/email/suggestion_sent_subject.txt',
+                {'subject': self}
+            )
+            email_body = render_to_string(
+                'wiki/email/suggestion_sent.txt',
+                {'subject': self}
+            )
+            self.user.email_user(
+                ''.join(email_subject.splitlines()),
+                email_body,
+                settings.DEFAULT_FROM_EMAIL
+            )
+
+            # Send e-mail to Wiki Team
+            email_subject = render_to_string(
+                'wiki/email/new_suggestion_subject.txt',
+                {'subject': self}
+            )
+            email_body = render_to_string(
+                'wiki/email/new_suggestion.txt',
+                {'subject': self}
+            )
+            send_mail(
+                ''.join(email_subject.splitlines()),
+                email_body,
+                settings.DEFAULT_FROM_EMAIL,
+                settings.OPPS_WIKI_EMAILS
+            )
+        super(Suggestion, self).save(*args, **kwargs)
+
     def publish(self, is_auto=False):
         if is_auto:
             self.status = 'auto'
@@ -162,9 +199,39 @@ class Suggestion(Owned, Date):
         suggested_obj.save()
         self.save()
 
+        # Send e-mail to user
+        email_subject = render_to_string(
+            'wiki/email/suggestion_accepted_subject.txt',
+            {'subject': self}
+        )
+        email_body = render_to_string(
+            'wiki/email/suggestion_accepted.txt',
+            {'subject': self}
+        )
+        self.user.email_user(
+            ''.join(email_subject.splitlines()),
+            email_body,
+            settings.DEFAULT_FROM_EMAIL
+        )
+
     def reject(self):
         self.status = 'reject'
         self.save()
+
+        # Send e-mail to user
+        email_subject = render_to_string(
+            'wiki/email/suggestion_reject_subject.txt',
+            {'subject': self}
+        )
+        email_body = render_to_string(
+            'wiki/email/suggestion_reject.txt',
+            {'subject': self}
+        )
+        self.user.email_user(
+            ''.join(email_subject.splitlines()),
+            email_body,
+            settings.DEFAULT_FROM_EMAIL
+        )
 
     def __unicode__(self):
         return self.status
@@ -178,10 +245,29 @@ class Report(Owned, Date):
         verbose_name_plural = _(u'reports')
         unique_together = ('user', 'wiki')
 
+    def save(self, *args, **kwargs):
+        if not self.pk:
+            # Send e-mail to Wiki Team
+            email_subject = render_to_string(
+                'wiki/email/new_report_subject.txt',
+                {'subject': self}
+            )
+            email_body = render_to_string(
+                'wiki/email/new_report.txt',
+                {'subject': self}
+            )
+            send_mail(
+                ''.join(email_subject.splitlines()),
+                email_body,
+                settings.DEFAULT_FROM_EMAIL,
+                settings.OPPS_WIKI_EMAILS
+            )
+        super(Report, self).save(*args, **kwargs)
+
 
 class Voting(Owned, Date):
     VOTE_CHOICES = ((1, _(u'liked')), (-1, _(u'disliked')))
-    wiki= models.ForeignKey('wiki.Wiki', verbose_name=_(u'wiki'))
+    wiki = models.ForeignKey('wiki.Wiki', verbose_name=_(u'wiki'))
     vote = models.SmallIntegerField(
         choices=VOTE_CHOICES,
         verbose_name=_(u'vote')

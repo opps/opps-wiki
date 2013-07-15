@@ -6,6 +6,7 @@ from django.contrib.contenttypes.models import ContentType
 from django.contrib.sites.models import get_current_site
 from django.core.urlresolvers import reverse_lazy
 from django.core.files.base import ContentFile
+from django.conf import settings
 from django.forms.models import modelform_factory
 from django.db.models import get_model, FileField
 from django.http import (Http404, HttpResponse, HttpResponseRedirect,
@@ -171,6 +172,10 @@ class ReportCreateView(View):
         pk = request.GET.get('wiki_pk', None)
         wiki = get_object_or_404(Wiki, pk=pk)
         Report.objects.create(wiki=wiki, user=request.user)
+        reports = wiki.report_set.count()
+        if reports > getattr(settings, 'UNPLUBLISH_REPORTS_NUMBER', 100):
+            wiki.published = False
+            wiki.save()
         return HttpResponse(ugettext_lazy(u"Report successfully sent"))
 
 
