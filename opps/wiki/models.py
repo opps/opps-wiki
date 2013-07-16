@@ -84,6 +84,7 @@ class Wiki(MPTTModel, NotUserPublishable, Slugged):
         while parent:
             self.long_slug = u"{}/{}".format(parent.slug, self.long_slug)
             parent = parent.parent
+
         super(Wiki, self).save(*args, **kwargs)
 
     def get_absolute_url(self):

@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
 import pickle
+import reversion
 
 from django.contrib.contenttypes.models import ContentType
 from django.contrib.sites.models import get_current_site
@@ -122,7 +123,9 @@ class WikiCreateView(BaseWikiView, CreateView):
         )
 
         if self.request.user.has_perm('wiki.can_publish'):
-            suggestion.publish(is_auto=True)
+            with reversion.create_revision():
+                suggestion.publish(is_auto=True)
+                reversion.set_user(self.request.user)
             return HttpResponseRedirect(self.success_published)
 
         return HttpResponseRedirect(self.success_url)
@@ -176,7 +179,9 @@ class WikiUpdateView(BaseWikiView, UpdateView):
         )
 
         if self.request.user.has_perm('wiki.can_publish'):
-            suggestion.publish(is_auto=True)
+            with reversion.create_revision():
+                suggestion.publish(is_auto=True)
+                reversion.set_user(self.request.user)
             return HttpResponseRedirect(self.success_published)
 
         return HttpResponseRedirect(self.success_url)

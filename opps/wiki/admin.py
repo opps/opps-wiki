@@ -86,7 +86,10 @@ class SuggestionAdmin(admin.ModelAdmin):
             accept = request.POST.get('accept')
             reject = request.POST.get('reject')
             if accept:
-                obj.publish()
+                with reversion.create_revision():
+                    obj.publish()
+                    reversion.set_user(request.user)
+
                 self.message_user(
                     request,
                     _(u'Suggestion published successfully'),
