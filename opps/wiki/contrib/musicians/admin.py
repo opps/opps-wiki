@@ -29,7 +29,7 @@ class AlbumAdmin(WikiAdmin):
 admin.site.register(Album, AlbumAdmin)
 
 
-class GenreAdmin(WikiAdmin):
+class GenreAdmin(admin.ModelAdmin):
     pass
 admin.site.register(Genre, GenreAdmin)
 
