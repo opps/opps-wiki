@@ -191,8 +191,10 @@ class Suggestion(Owned, Date):
     def publish(self, is_auto=False):
         if is_auto:
             self.status = 'auto'
+            self.save()
         else:
             self.status = 'accept'
+            self.save()
             num = self.user.suggestion_set.filter(status='accept').count()
             if num >= getattr(settings, 'USER_CAN_PUBLISH_NUMBER', 100):
                 p = Permission.objects.get_by_natural_key(
@@ -205,7 +207,6 @@ class Suggestion(Owned, Date):
         suggested_obj.save()
         if suggested_obj._tags:
             suggested_obj.tags.set(*parse_tags(suggested_obj._tags))
-        self.save()
 
         # Send e-mail to user
         email_subject = render_to_string(

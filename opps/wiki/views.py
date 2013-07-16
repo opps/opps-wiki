@@ -193,7 +193,7 @@ class ReportCreateView(View):
         wiki = get_object_or_404(Wiki, pk=pk)
         Report.objects.create(wiki=wiki, user=request.user)
         reports = wiki.report_set.count()
-        if reports > getattr(settings, 'UNPLUBLISH_REPORTS_NUMBER', 100):
+        if reports >= getattr(settings, 'UNPUBLISH_REPORTS_NUMBER', 100):
             wiki.published = False
             wiki.save()
         return HttpResponse(ugettext_lazy(u"Report successfully sent"))
