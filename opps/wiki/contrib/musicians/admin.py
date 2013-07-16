@@ -5,7 +5,7 @@ from django import forms
 
 from opps.wiki.admin import WikiAdmin
 
-from .models import Album, Musician, Embed
+from .models import Album, Musician, Embed, Genre
 
 
 class EmbedInline(admin.TabularInline):
@@ -27,3 +27,9 @@ admin.site.register(Embed, EmbedAdmin)
 class AlbumAdmin(WikiAdmin):
     pass
 admin.site.register(Album, AlbumAdmin)
+
+
+class GenreAdmin(WikiAdmin):
+    pass
+admin.site.register(Genre, GenreAdmin)
+

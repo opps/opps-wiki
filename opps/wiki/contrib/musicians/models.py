@@ -22,7 +22,7 @@ class Musician(Wiki):
     biography = models.TextField(_(u'biography'))
     # it will use Wiki title as name
     genre = models.ForeignKey('Genre', null=True, blank=True,
-                              verbose_name=_(u'genre'))
+                              verbose_name=_(u'music genre'))
     birthday = models.DateField(_(u'birthday'))
     type = models.CharField(_(u'type'), max_length=10, choices=TYPE_CHOICES)
     end = models.DateField(_(u'end/death'), null=True, blank=True)
