@@ -10,7 +10,7 @@
   
   <ul>
   {% for embed in object.embed_set.all %}
-    <li>{{ embed.embed_text|safe }}</li>
+    <li>{{ embed.embed_text|safe }} - <a href="{% url 'wiki-edit' embed.long_slug %}">{% trans 'Edit' %}</a></li>
   {% endfor %}
   </ul>
 {% endblock %}
