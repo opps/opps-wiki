@@ -1,5 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
+
+import base64
 import reversion
 import pickle
 
@@ -104,7 +106,7 @@ class SuggestionAdmin(admin.ModelAdmin):
                 )
             return HttpResponseRedirect(admin_url(Suggestion, "changelist"))
 
-        suggested_obj = pickle.loads(obj.serialized_data)
+        suggested_obj = pickle.loads(base64.b64decode(obj.serialized_data))
         wiki_model = obj.content_type.model_class()
         original_obj = obj.content_object
 

@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 
+import base64
 import pickle
 
 from django.contrib.auth import get_user_model
@@ -202,7 +203,7 @@ class Suggestion(Owned, Date):
                 )
                 self.user.user_permissions.add(p.pk)
 
-        suggested_obj = pickle.loads(self.serialized_data)
+        suggested_obj = pickle.loads(base64.b64decode(self.serialized_data))
         suggested_obj.published = True
         suggested_obj.save()
         if suggested_obj._tags:

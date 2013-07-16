@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 
+import base64
 import pickle
 import reversion
 
@@ -118,8 +119,8 @@ class WikiCreateView(BaseWikiView, CreateView):
             user=self.request.user,
             title=form.cleaned_data['title'],
             content_type=ContentType.objects.get_for_model(self.model),
-            serialized_data=pickle.dumps(self.object),
-            status='pending',
+            serialized_data=base64.b64encode(pickle.dumps(self.object)),
+            status=u'pending',
         )
 
         if self.request.user.has_perm('wiki.can_publish'):
@@ -174,8 +175,8 @@ class WikiUpdateView(BaseWikiView, UpdateView):
             user=self.request.user,
             title=form.cleaned_data['title'],
             content_object=self.object,
-            serialized_data=pickle.dumps(self.object),
-            status='pending',
+            serialized_data=base64.b64encode(pickle.dumps(self.object)),
+            status=u'pending',
         )
 
         if self.request.user.has_perm('wiki.can_publish'):
