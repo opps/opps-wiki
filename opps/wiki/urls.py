@@ -27,10 +27,12 @@ urlpatterns = patterns(
         name='wiki-edit'),
 
     url(r'^success_suggested/$',
-        TemplateView.as_view(template_name='wiki/success_msg.html'),
+        cache_page(settings.OPPS_CACHE_EXPIRE)(TemplateView.as_view(
+            template_name='wiki/success_msg.html')),
         name='success_suggestion_msg'),
     url(r'^success_published/$',
-        TemplateView.as_view(template_name='wiki/success_published.html'),
+        cache_page(settings.OPPS_CACHE_EXPIRE)(TemplateView.as_view(
+            template_name='wiki/success_published.html')),
         name='success_published_msg'),
 
     url(r'^voting/$', VotingView.as_view(), name='wiki-voting'),
