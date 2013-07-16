@@ -18,6 +18,7 @@ from django.template.loader import render_to_string
 from mptt.models import MPTTModel, TreeForeignKey
 from taggit.models import TaggedItemBase
 from taggit.managers import TaggableManager
+from taggit.utils import parse_tags
 
 from opps.core.models import NotUserPublishable, Slugged, Owned, Date
 
@@ -34,6 +35,7 @@ class Wiki(MPTTModel, NotUserPublishable, Slugged):
         through=TaggedWiki,
         verbose_name=u'Tags'
     )
+    _tags = models.CharField(max_length=255, blank=True, null=True)
     child_class = models.CharField(
         _(u'child class'),
         max_length=30,
@@ -61,6 +63,9 @@ class Wiki(MPTTModel, NotUserPublishable, Slugged):
     )
 
     inline = models.BooleanField(_(u'inline'), default=False, editable=False)
+
+    PUBLIC_FIELDS = ('title', 'parent', 'tags')
+    PUBLIC_FIELDS_WIDGETS = None
 
     class Meta:
         permissions = (('can_publish', _(u'User can publish automatically')),)
@@ -197,6 +202,8 @@ class Suggestion(Owned, Date):
         suggested_obj = pickle.loads(self.serialized_data)
         suggested_obj.published = True
         suggested_obj.save()
+        if suggested_obj._tags:
+            suggested_obj.tags.set(*parse_tags(suggested_obj._tags))
         self.save()
 
         # Send e-mail to user

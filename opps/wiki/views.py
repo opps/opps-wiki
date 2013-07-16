@@ -91,7 +91,11 @@ class WikiCreateView(BaseWikiView, CreateView):
         return self.model._default_manager.all()
 
     def get_form_class(self):
-        return modelform_factory(self.model, fields=self.model.PUBLIC_FIELDS)
+        return modelform_factory(
+            self.model,
+            fields=self.model.PUBLIC_FIELDS,
+            widgets=self.model.PUBLIC_FIELDS_WIDGETS
+        )
 
     def form_valid(self, form):
         self.object = form.save(commit=False)
@@ -105,6 +109,9 @@ class WikiCreateView(BaseWikiView, CreateView):
                         ContentFile(obj_field.read()),
                         save=False
                     )
+
+        if 'tags' in form.cleaned_data:
+            self.object._tags = ','.join(form.cleaned_data['tags'])
 
         suggestion = Suggestion.objects.create(
             user=self.request.user,
@@ -138,7 +145,11 @@ class WikiUpdateView(BaseWikiView, UpdateView):
 
     def get_form_class(self):
         obj = self.get_object()
-        return modelform_factory(obj.__class__, fields=obj.PUBLIC_FIELDS)
+        return modelform_factory(
+            obj.__class__,
+            fields=obj.PUBLIC_FIELDS,
+            widgets=obj.PUBLIC_FIELDS_WIDGETS
+        )
 
     def form_valid(self, form):
         self.object = form.save(commit=False)
@@ -152,10 +163,14 @@ class WikiUpdateView(BaseWikiView, UpdateView):
                         ContentFile(obj_field.read()),
                         save=False
                     )
+
+        if 'tags' in form.cleaned_data:
+            self.object._tags = ','.join(form.cleaned_data['tags'])
+
         suggestion = Suggestion.objects.create(
             user=self.request.user,
             title=form.cleaned_data['title'],
-            content_type=ContentType.objects.get_for_model(self.model),
+            content_object=self.object,
             serialized_data=pickle.dumps(self.object),
             status='pending',
         )
