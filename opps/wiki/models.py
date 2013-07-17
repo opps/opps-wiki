@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-
+import uuid
 import base64
 import pickle
 
@@ -22,6 +22,8 @@ from taggit.managers import TaggableManager
 from taggit.utils import parse_tags
 
 from opps.core.models import NotUserPublishable, Slugged, Owned, Date
+from opps.containers.models import Container
+from opps.channels.models import Channel
 
 
 class TaggedWiki(TaggedItemBase):
@@ -135,7 +137,7 @@ class WikiInline(Wiki):
         super(WikiInline, self).save(*args, **kwargs)
 
 
-class Suggestion(Owned, Date):
+class Suggestion(Container):
     STATUS_CHOICES = (
         ('pending', _(u'Pending')),
         ('reject', _(u'Reject')),
@@ -143,19 +145,32 @@ class Suggestion(Owned, Date):
         ('auto', _(u'Auto accepted')),
     )
     content_type = models.ForeignKey('contenttypes.ContentType')
-    object_id = models.PositiveIntegerField(verbose_name='object name',
-                                            null=True)
-    title = models.CharField(_(u'title'), max_length=140)
+    object_id = models.PositiveIntegerField(
+        verbose_name='object name',
+        null=True
+    )
     content_object = generic.GenericForeignKey()
     serialized_data = models.TextField(_(u'data'))
-    status = models.CharField(_(u'status'), max_length=50,
-                              choices=STATUS_CHOICES)
+    status = models.CharField(
+        _(u'status'),
+        max_length=50,
+        choices=STATUS_CHOICES
+    )
 
     class Meta:
         verbose_name = _(u'suggestion')
         verbose_name_plural = _(u'suggestions')
 
     def save(self, *args, **kwargs):
+        self.short_url = 'None'
+        self.show_on_root_channel = False
+        slug = unicode(uuid.uuid4())
+        channel, created = Channel.objects.get_or_create(
+            slug='wiki',
+            defaults={'name': 'Wiki', 'user': self.user}
+        )
+        self.channel = channel
+
         if not self.pk:
             # Send e-mail to user
             email_subject = render_to_string(
@@ -196,8 +211,16 @@ class Suggestion(Owned, Date):
         else:
             self.status = 'accept'
             self.save()
-            num = self.user.suggestion_set.filter(status='accept').count()
-            if num >= getattr(settings, 'USER_CAN_PUBLISH_NUMBER', 100):
+            suggestions_accept = Suggestion.objects.filter(
+                user=self.user,
+                status='accept'
+            ).count()
+            USER_CAN_PUBLISH_NUMBER = getattr(
+                settings,
+                'USER_CAN_PUBLISH_NUMBER',
+                100
+            )
+            if suggestions_accept >= USER_CAN_PUBLISH_NUMBER:
                 p = Permission.objects.get_by_natural_key(
                     'can_publish', 'wiki', 'wiki'
                 )
