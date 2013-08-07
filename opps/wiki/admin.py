@@ -112,8 +112,6 @@ class SuggestionAdmin(admin.ModelAdmin):
 
         compare_data = []
         for field in wiki_model.PUBLIC_FIELDS:
-            if field == 'tags':
-                field = '_tags'
             cur_value = unicode(getattr(original_obj, field, '') or '')
             new_value = unicode(getattr(suggested_obj, field, '') or '')
             diff = ndiff(cur_value.splitlines(1), new_value.splitlines(1))

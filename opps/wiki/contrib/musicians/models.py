@@ -3,7 +3,7 @@
 from django.db import models
 from django.utils.translation import ugettext_lazy as _
 
-from redactor.widgets import RedactorEditor
+from opps.core.widgets import OppsEditor
 
 from opps.wiki.models import Wiki, WikiInline
 
@@ -18,7 +18,7 @@ class Genre(models.Model):
 class Musician(Wiki):
     PUBLIC_FIELDS = ('title', 'type', 'genre', 'birthday', 'end', 'biography',
                      'tags')
-    PUBLIC_FIELDS_WIDGETS = {'biography': RedactorEditor()}
+    PUBLIC_FIELDS_WIDGETS = {'biography': OppsEditor()}
     TYPE_CHOICES = (('artist', _(u'Artist')), ('band', _(u'Band')))
     biography = models.TextField(_(u'biography'))
     # it will use Wiki title as name

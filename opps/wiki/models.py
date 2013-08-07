@@ -17,28 +17,15 @@ from django.utils import timezone
 from django.template.loader import render_to_string
 
 from mptt.models import MPTTModel, TreeForeignKey
-from taggit.models import TaggedItemBase
-from taggit.managers import TaggableManager
-from taggit.utils import parse_tags
 
 from opps.core.models import NotUserPublishable, Slugged, Owned, Date
 from opps.containers.models import Container
 from opps.channels.models import Channel
+from opps.core.tags.models import Tagged
 
 
-class TaggedWiki(TaggedItemBase):
-    """Tag for wiki """
-    content_object = models.ForeignKey('wiki.Wiki')
-
-
-class Wiki(MPTTModel, NotUserPublishable, Slugged):
+class Wiki(MPTTModel, NotUserPublishable, Slugged, Tagged):
     title = models.CharField(_(u"title"), max_length=140)
-    tags = TaggableManager(
-        blank=True,
-        through=TaggedWiki,
-        verbose_name=u'Tags'
-    )
-    _tags = models.CharField(max_length=255, blank=True, null=True)
     child_class = models.CharField(
         _(u'child class'),
         max_length=30,
@@ -229,8 +216,6 @@ class Suggestion(Container):
         suggested_obj = pickle.loads(base64.b64decode(self.serialized_data))
         suggested_obj.published = True
         suggested_obj.save()
-        if suggested_obj._tags:
-            suggested_obj.tags.set(*parse_tags(suggested_obj._tags))
 
         # Send e-mail to user
         email_subject = render_to_string(

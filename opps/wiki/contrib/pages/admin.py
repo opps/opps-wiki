@@ -3,7 +3,7 @@
 from django.contrib import admin
 from django import forms
 
-from redactor.widgets import RedactorEditor
+from opps.core.widgets import OppsEditor
 from opps.wiki.admin import WikiAdmin
 
 from .models import Page
@@ -12,7 +12,7 @@ from .models import Page
 class PageAdminForm(forms.ModelForm):
     class Meta:
         model = Page
-        widgets = {'content': RedactorEditor()}
+        widgets = {'content': OppsEditor()}
 
 
 class PageAdmin(WikiAdmin):
