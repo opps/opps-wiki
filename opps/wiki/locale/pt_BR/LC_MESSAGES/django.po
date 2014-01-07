@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-07-16 09:38-0300\n"
+"POT-Creation-Date: 2014-01-07 12:34-0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -18,177 +18,185 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
-#: admin.py:95
+#: admin.py:97
 msgid "Suggestion published successfully"
 msgstr "Sugestão publicada com sucesso"
 
-#: admin.py:102
+#: admin.py:104
 msgid "Suggestion rejected successfully"
 msgstr "Sugestão rejeitada com sucesso"
 
-#: models.py:32 models.py:147
-msgid "title"
-msgstr "título"
+#: models.py:28
+msgid "Title"
+msgstr "Título"
 
-#: models.py:40
-msgid "child class"
-msgstr ""
+#: models.py:30
+msgid "Child class"
+msgstr "Classe filha"
+
+#: models.py:36
+msgid "Child app label"
+msgstr "Texto da aplicação filha"
 
 #: models.py:46
-msgid "child app label"
-msgstr ""
+msgid "Parent"
+msgstr "Pai"
 
-#: models.py:59
+#: models.py:50
 msgid "Path name"
-msgstr "URL"
+msgstr "Caminho"
 
-#: models.py:65
-msgid "inline"
+#: models.py:56
+msgid "Inline"
 msgstr ""
 
-#: models.py:71
+#: models.py:62
 msgid "User can publish automatically"
 msgstr "Usuário pode publicar automaticamente"
 
-#: models.py:139
+#: models.py:130
 msgid "Pending"
 msgstr "Pendente"
 
-#: models.py:140 templates/admin/suggestion_form.html:56
+#: models.py:131 templates/admin/suggestion_form.html:56
 msgid "Reject"
 msgstr "Rejeitar"
 
-#: models.py:141 templates/admin/suggestion_form.html:55
+#: models.py:132 templates/admin/suggestion_form.html:55
 msgid "Accept"
 msgstr "Aceitar"
 
-#: models.py:142
+#: models.py:133
 msgid "Auto accepted"
 msgstr "Aceito automaticamente"
 
-#: models.py:149
-msgid "data"
-msgstr "dados"
+#: models.py:136
+msgid "Content type"
+msgstr "Tipo de conteúdo"
+
+#: models.py:142
+msgid "Data"
+msgstr "Dados"
+
+#: models.py:144
+msgid "Status"
+msgstr "Estado"
 
 #: models.py:150
-msgid "status"
-msgstr "condição"
+msgid "Suggestion"
+msgstr "Sugestão"
 
-#: models.py:154
-msgid "suggestion"
-msgstr "sugestão"
+#: models.py:151
+msgid "Suggestions"
+msgstr "Sugestões"
 
-#: models.py:155
-msgid "suggestions"
-msgstr "sugestões"
-
-#: models.py:249 models.py:278
+#: models.py:261 models.py:290
 msgid "wiki"
 msgstr ""
 
-#: models.py:252
+#: models.py:264
 msgid "report"
 msgstr "denúncia"
 
-#: models.py:253
+#: models.py:265
 msgid "reports"
 msgstr "denúncias"
 
-#: models.py:277
+#: models.py:289
 msgid "liked"
 msgstr "curti"
 
-#: models.py:277
+#: models.py:289
 msgid "disliked"
 msgstr "não curti"
 
-#: models.py:281
+#: models.py:293
 msgid "vote"
 msgstr "voto"
 
-#: views.py:199
+#: views.py:200
 msgid "Report successfully sent"
 msgstr "Denúncia enviada com sucesso"
 
-#: views.py:210
+#: views.py:211
 msgid "Voted successfully"
 msgstr "Votado com sucesso"
 
-#: contrib/musicians/models.py:11 contrib/musicians/models.py:41
+#: contrib/musicians/models.py:12 contrib/musicians/models.py:42
 msgid "name"
 msgstr "nome"
 
-#: contrib/musicians/models.py:21
+#: contrib/musicians/models.py:22
 msgid "Artist"
 msgstr "Artista"
 
-#: contrib/musicians/models.py:21
+#: contrib/musicians/models.py:22
 msgid "Band"
 msgstr "Banda"
 
-#: contrib/musicians/models.py:22
+#: contrib/musicians/models.py:23
 msgid "biography"
 msgstr "biografia"
 
-#: contrib/musicians/models.py:25
-msgid "genre"
-msgstr "gênero"
-
 #: contrib/musicians/models.py:26
+msgid "music genre"
+msgstr "gênero musical"
+
+#: contrib/musicians/models.py:27
 msgid "birthday"
 msgstr "aniversário"
 
-#: contrib/musicians/models.py:27
+#: contrib/musicians/models.py:28
 msgid "type"
 msgstr "tipo"
 
-#: contrib/musicians/models.py:28
+#: contrib/musicians/models.py:29
 msgid "end/death"
 msgstr "término/morte"
 
-#: contrib/musicians/models.py:31 contrib/musicians/models.py:32
-#: contrib/musicians/models.py:43 contrib/musicians/models.py:62
+#: contrib/musicians/models.py:32 contrib/musicians/models.py:33
+#: contrib/musicians/models.py:44 contrib/musicians/models.py:63
 msgid "musician"
 msgstr "músico"
 
-#: contrib/musicians/models.py:42
+#: contrib/musicians/models.py:43
 msgid "tracks"
 msgstr "faixas"
 
-#: contrib/musicians/models.py:44
+#: contrib/musicians/models.py:45
 msgid "thumbnail"
 msgstr "miniatura"
 
-#: contrib/musicians/models.py:45
+#: contrib/musicians/models.py:46
 msgid "record label"
 msgstr "gravadora"
 
-#: contrib/musicians/models.py:47
+#: contrib/musicians/models.py:48
 msgid "year"
 msgstr "ano"
 
-#: contrib/musicians/models.py:50
+#: contrib/musicians/models.py:51
 msgid "musician album"
 msgstr "álbum do músico"
 
-#: contrib/musicians/models.py:63
+#: contrib/musicians/models.py:64
 msgid "embed"
 msgstr ""
 
-#: contrib/musicians/models.py:68
+#: contrib/musicians/models.py:69
 msgid "musician embed"
 msgstr "embed do músico"
 
-#: contrib/musicians/models.py:69
+#: contrib/musicians/models.py:70
 msgid "musician embeds"
 msgstr "embeds do músico"
 
-#: contrib/musicians/templates/musicians/musician_detail.html:13
+#: contrib/musicians/templates/musicians/musician_detail.html:14
 #: templates/wiki/wiki_detail.html:52
 msgid "Edit"
 msgstr "Editar"
 
-#: contrib/pages/models.py:13
+#: contrib/pages/models.py:14
 msgid "content"
 msgstr "conteúdo"
 
@@ -304,3 +312,9 @@ msgstr "Sua sugestão foi enviada"
 #: templates/wiki/email/suggestion_sent_subject.txt:2
 msgid "Suggestion Sent"
 msgstr "Sugestão Enviada"
+
+#~ msgid "data"
+#~ msgstr "dados"
+
+#~ msgid "genre"
+#~ msgstr "gênero"

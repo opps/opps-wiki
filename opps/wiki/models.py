@@ -25,15 +25,15 @@ from opps.core.tags.models import Tagged
 
 
 class Wiki(MPTTModel, NotUserPublishable, Slugged, Tagged):
-    title = models.CharField(_(u"title"), max_length=140)
+    title = models.CharField(_(u"Title"), max_length=140)
     child_class = models.CharField(
-        _(u'child class'),
+        _(u'Child class'),
         max_length=30,
         db_index=True,
         editable=False
     )
     child_app_label = models.CharField(
-        _(u'child app label'),
+        _(u'Child app label'),
         max_length=30,
         db_index=True,
         editable=False
@@ -42,7 +42,8 @@ class Wiki(MPTTModel, NotUserPublishable, Slugged, Tagged):
         'self',
         related_name='subpage',
         null=True,
-        blank=True
+        blank=True,
+        verbose_name=_(u'Parent')
     )
 
     long_slug = models.SlugField(
@@ -52,7 +53,7 @@ class Wiki(MPTTModel, NotUserPublishable, Slugged, Tagged):
         editable=False
     )
 
-    inline = models.BooleanField(_(u'inline'), default=False, editable=False)
+    inline = models.BooleanField(_(u'Inline'), default=False, editable=False)
 
     PUBLIC_FIELDS = ('title', 'parent', 'tags')
     PUBLIC_FIELDS_WIDGETS = None
@@ -131,22 +132,23 @@ class Suggestion(Container):
         ('accept', _(u'Accept')),
         ('auto', _(u'Auto accepted')),
     )
-    content_type = models.ForeignKey('contenttypes.ContentType')
+    content_type = models.ForeignKey('contenttypes.ContentType',
+                                     verbose_name=_(u'Content type'))
     object_id = models.PositiveIntegerField(
-        verbose_name='object name',
+        verbose_name='Object name',
         null=True
     )
     content_object = generic.GenericForeignKey()
-    serialized_data = models.TextField(_(u'data'))
+    serialized_data = models.TextField(_(u'Data'))
     status = models.CharField(
-        _(u'status'),
+        _(u'Status'),
         max_length=50,
         choices=STATUS_CHOICES
     )
 
     class Meta:
-        verbose_name = _(u'suggestion')
-        verbose_name_plural = _(u'suggestions')
+        verbose_name = _(u'Suggestion')
+        verbose_name_plural = _(u'Suggestions')
 
     def save(self, *args, **kwargs):
         self.short_url = 'None'
