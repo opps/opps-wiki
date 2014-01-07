@@ -295,6 +295,8 @@ class Voting(Owned, Date):
 
     class Meta:
         unique_together = ('user', 'wiki')
+        verbose_name = _(u'Voting')
+        verbose_name_plural = _(u'Votings')
 
     def __unicode__(self):
         for choice in self.VOTE_CHOICES:
