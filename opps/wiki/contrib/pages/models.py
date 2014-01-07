@@ -12,3 +12,8 @@ class Page(Wiki):
     PUBLIC_FIELDS = ('title', 'content', 'parent', 'tags')
     PUBLIC_FIELDS_WIDGETS = {'content': OppsEditor()}
     content = models.TextField(_(u'content'), )
+
+    class Meta:
+        permissions = (('can_publish', _(u'User can publish automatically')),)
+        verbose_name = _(u'Page')
+        verbose_name_plural = _(u'Pages')

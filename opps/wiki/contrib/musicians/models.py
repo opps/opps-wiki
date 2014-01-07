@@ -14,6 +14,10 @@ class Genre(models.Model):
     def __unicode__(self):
         return self.name
 
+    class Meta:
+        verbose_name = _(u'Genre')
+        verbose_name_plural = _(u'Genres')
+
 
 class Musician(Wiki):
     PUBLIC_FIELDS = ('title', 'type', 'genre', 'birthday', 'end', 'biography',
@@ -30,7 +34,7 @@ class Musician(Wiki):
 
     class Meta:
         verbose_name = _(u'musician')
-        verbose_name_plural = _(u'musician')
+        verbose_name_plural = _(u'musicians')
 
     def __unicode__(self):
         return self.title
@@ -48,8 +52,8 @@ class Album(Wiki):
     year = models.PositiveSmallIntegerField(_(u'year'))
 
     class Meta:
-        verbose_name = _(u'musician album')
-        verbose_name_plural = (u'musician albums')
+        verbose_name = _(u'Musician album')
+        verbose_name_plural = _(u'Musician albums')
 
     def save(self, *args, **kwargs):
         self.parent_id = self.musician_id

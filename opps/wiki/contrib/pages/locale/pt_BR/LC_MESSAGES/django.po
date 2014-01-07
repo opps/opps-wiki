@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-07-16 09:39-0300\n"
+"POT-Creation-Date: 2014-01-07 12:58-0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -18,6 +18,18 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
-#: models.py:13
+#: models.py:14
 msgid "content"
 msgstr "conteúdo"
+
+#: models.py:17
+msgid "User can publish automatically"
+msgstr "Usuário pode publicar automaticamente"
+
+#: models.py:18
+msgid "Page"
+msgstr "Página"
+
+#: models.py:19
+msgid "Pages"
+msgstr "Páginas"
